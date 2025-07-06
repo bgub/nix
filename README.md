@@ -31,7 +31,7 @@ nix-switch
 
 ## Features
 
-- Development tools (Node.js, Python, Rust, etc.)
+- Development tools managed with [mise](https://mise.jdx.dev/) (Node.js, Python, Rust, etc.)
 - Shell configuration with Zsh, Starship, and useful aliases
 - Git setup with common ignores and GitHub integration
 - Custom Next.js development utilities
