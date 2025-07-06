@@ -4,6 +4,7 @@
     ../modules/home-manager.nix
     ../modules/git.nix
     ../modules/zsh.nix
+    ../modules/mise.nix
   ];
 
   # common nix settings

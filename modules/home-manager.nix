@@ -21,12 +21,13 @@
       antidote
 
       # programming languages
-      fnm
-      python3
-      deno
-      bun
-      rustup
-      uv
+      mise
+      # fnm
+      # python3
+      # deno
+      # bun
+      # rustup
+      # uv
 
       # misc
       nil
