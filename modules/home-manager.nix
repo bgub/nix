@@ -21,13 +21,7 @@
       antidote
 
       # programming languages
-      mise
-      # fnm
-      # python3
-      # deno
-      # bun
-      # rustup
-      # uv
+      mise # node, deno, bun, rust, python, etc.
 
       # misc
       nil

@@ -21,7 +21,7 @@
 
       # macOS-specific user packages
       home.packages = with pkgs; [
-        aerospace
+
       ];
     };
     extraSpecialArgs = {

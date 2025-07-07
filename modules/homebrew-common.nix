@@ -12,10 +12,42 @@
     caskArgs.no_quarantine = true;
     global.brewfile = true;
 
-    # only add homebrew packages
-    # if we can't find them in nixpkgs
-    casks = [ ];
-    brews = [ ];
-    taps = [ ];
+    # homebrew is best for GUI apps
+    # nixpkgs is best for CLI tools
+    casks = [
+      # OS enhancements
+      "aerospace"
+      "cleanshot"
+      "hiddenbar"
+      "raycast"
+
+      # dev
+      "cursor"
+      "ghostty"
+      "visual-studio-code"
+      "zed"
+
+      # messaging
+      "discord"
+      "slack"
+      "signal"
+
+      # other
+      "1password"
+      "anki"
+      "brave-browser"
+      "obsidian"
+      "protonvpn"
+      "spotify"
+      "thebrowsercompany-dia"
+      "zen"
+    ];
+    brews = [
+      "docker"
+      "colima"
+    ];
+    taps = [
+      "nikitabobko/tap"
+    ];
   };
 }
