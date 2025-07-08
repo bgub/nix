@@ -1,7 +1,8 @@
+# created by https://github.com/lubieowoce
 
 function next-dev {
 	local dir="$1"
-	
+
 	if [ -n "$dir" ]; then
 		local switch_re="^--?[a-zA-Z0-9_]+$"
 		if [[ "$dir" =~ $switch_re ]]; then
@@ -45,7 +46,7 @@ function next-dev-turbo {
 
 function next-build-and-start {
 	local dir="$1"
-	
+
 	if [ -n "$dir" ]; then
 		local switch_re="^--?[a-zA-Z0-9_]+$"
 		if [[ "$dir" =~ $switch_re ]]; then

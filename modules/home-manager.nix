@@ -18,7 +18,6 @@
       gh
       zoxide
       starship
-      antidote
 
       # programming languages
       mise # node, deno, bun, rust, python, etc.
@@ -36,10 +35,10 @@
       nerd-fonts.fira-mono
     ];
 
-    # Create .hushlogin file to suppress login messages
+    # create .hushlogin file to suppress login messages
     file.".hushlogin".text = "";
 
-    # Activation script to set up mise configuration
+    # activation script to set up mise configuration
     activation = {
       setupMise = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         # use the virtual environment created by uv 
@@ -51,7 +50,7 @@
         # disable warning about */.node-version files
         ${pkgs.mise}/bin/mise settings add idiomatic_version_file_enable_tools "[]"
 
-        # Set global tool versions (auto_install will handle installation)
+        # set global tool versions (auto_install will handle installation)
         ${pkgs.mise}/bin/mise use --global node@lts
         ${pkgs.mise}/bin/mise use --global bun@latest
         ${pkgs.mise}/bin/mise use --global deno@latest

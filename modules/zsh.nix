@@ -10,17 +10,6 @@ _: {
       ".." = "cd ..";
       "nix-switch" = "sudo darwin-rebuild switch --flake ~/.config/nix";
     };
-
-    antidote = {
-      enable = true;
-      plugins = [
-        "belak/zsh-utils path:editor"
-        "belak/zsh-utils path:history"
-        "belak/zsh-utils path:utility"
-        "belak/zsh-utils path:completion"
-        "zsh-users/zsh-autosuggestions"
-      ];
-    };
   };
 
   programs.starship = {
