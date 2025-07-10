@@ -20,6 +20,7 @@
       "cleanshot"
       "hiddenbar"
       "raycast"
+      "betterdisplay"
 
       # dev
       "cursor"

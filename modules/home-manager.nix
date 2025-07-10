@@ -17,7 +17,6 @@
       ripgrep
       gh
       zoxide
-      starship
 
       # programming languages
       mise # node, deno, bun, rust, python, etc.

@@ -19,10 +19,6 @@
         ./shared.nix
       ];
 
-      # macOS-specific user packages
-      home.packages = with pkgs; [
-
-      ];
     };
     extraSpecialArgs = {
       inherit inputs self;
