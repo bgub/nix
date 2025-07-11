@@ -1,26 +1,27 @@
 {
   pkgs,
+  username,
   ...
 }:
 {
-  imports = [
-    ../../platforms/darwin.nix
-  ];
-
   networking.hostName = "work-macbook";
 
-  home-manager.users.nebrelbug = {
-    # home-manager packages and configuration
+  # host-specific homebrew casks
+  homebrew.casks = [
+    # "slack"
+  ];
+
+  # host-specific home-manager configuration
+  home-manager.users.${username} = {
     home.packages = with pkgs; [
       graphite-cli
     ];
 
     programs = {
-      # host-specific shell aliases, etc.
       zsh = {
         initContent = ''
-          # Source Next.js development utilities
-          [ -f ~/.config/nix/hosts/work-macbook/nextjs-utils.sh ] && source ~/.config/nix/hosts/work-macbook/nextjs-utils.sh
+          # Source shell functions
+          source ${./shell-functions.sh}
         '';
       };
     };

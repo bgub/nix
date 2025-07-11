@@ -1,50 +1,5 @@
+{ self, ... }:
 {
-  pkgs,
-  inputs,
-  self,
-  ...
-}:
-{
-  imports = [
-    ../modules/homebrew-common.nix
-    inputs.home-manager.darwinModules.home-manager
-  ];
-
-  # home-manager configuration (integrates with nix-darwin)
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users.nebrelbug = {
-      imports = [
-        ./shared.nix
-      ];
-
-    };
-    extraSpecialArgs = {
-      inherit inputs self;
-    };
-  };
-
-  # macOS-specific settings (system-level)
-  nix.enable = false; # using determinate installer
-  nixpkgs = {
-    hostPlatform = "aarch64-darwin";
-    config.allowUnfree = true; # Allow unfree packages
-  };
-
-  system.primaryUser = "nebrelbug";
-  users.users.nebrelbug = {
-    home = "/Users/nebrelbug";
-    shell = pkgs.zsh;
-  };
-
-  environment = {
-    systemPath = [
-      "/opt/homebrew/bin"
-    ];
-    pathsToLink = [ "/Applications" ];
-  };
-
   # touch ID for sudo
   security.pam.services.sudo_local.touchIdAuth = true;
 
@@ -75,7 +30,6 @@
         NSAutomaticPeriodSubstitutionEnabled = false;
         NSAutomaticWindowAnimationsEnabled = false;
       };
-
     };
   };
 }
