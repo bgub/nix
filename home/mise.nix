@@ -16,6 +16,9 @@
     # use the virtual environment created by uv 
     # ${pkgs.mise}/bin/mise settings set python.uv_venv_auto true
 
+    # disable virtual environment prompt modification
+    ${pkgs.mise}/bin/mise set VIRTUAL_ENV_DISABLE_PROMPT=1
+
     # enable corepack (pnpm, yarn, etc.)
     ${pkgs.mise}/bin/mise set MISE_NODE_COREPACK=true
 
