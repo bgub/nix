@@ -10,7 +10,7 @@ _: {
 
     extraConfig = {
       github = {
-        user = "nebrelbug";
+        user = "bgub";
       };
       init = {
         defaultBranch = "main";
