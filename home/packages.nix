@@ -14,8 +14,12 @@
       gh
       zoxide
 
-      # programming languages
-      mise # node, deno, bun, rust, python, etc.
+      # runtimes/toolchains managed via packages
+      fnm # Node/pnpm via Corepack; run: fnm env --use-on-cd
+      bun
+      deno
+      uv
+      rustup
 
       # misc
       nil

@@ -14,6 +14,11 @@ _: {
     initContent = ''
       # helper to quickly reload shell config
       reload-zsh() { exec "$SHELL" -l; }
+
+      # Initialize fnm (Fast Node Manager)
+      if command -v fnm >/dev/null 2>&1; then
+        eval "$(fnm env --use-on-cd)"
+      fi
     '';
   };
 
