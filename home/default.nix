@@ -6,7 +6,7 @@
     ./shell.nix
     ./mise.nix
     ./nvim.nix
-    ./editable.nix
+    ./dotfiles.nix
   ];
 
   home = {
