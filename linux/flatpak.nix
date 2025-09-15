@@ -19,6 +19,16 @@
       # Add more like: { appId = "com.visualstudio.code"; origin = "flathub"; }
     ];
 
+    overrides = {
+      "dev.zed.Zed" = {
+        Context = {
+          filesystems = [
+            "xdg-config/zed:rw"
+          ];
+        };
+      };
+    };
+
     # Optionally auto-update on activation (can slow down switches)
     update.onActivation = false;
   };
