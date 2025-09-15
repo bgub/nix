@@ -16,6 +16,8 @@
     packages = [
       { appId = "dev.zed.Zed"; origin = "flathub"; }
       { appId = "com.spotify.Client"; origin = "flathub"; }
+      { appId = "md.obsidian.Obsidian"; origin = "flathub"; }
+      { appId = "org.signal.Signal"; origin = "flathub"; }
       # Add more like: { appId = "com.visualstudio.code"; origin = "flathub"; }
     ];
 
