@@ -4,11 +4,13 @@
     packages = with pkgs; [
       # dev tools
       curl
-      vim
       tmux
       htop
       tree
       ripgrep
+      fd
+      fzf
+      eza
       gh
       zoxide
 
@@ -26,6 +28,17 @@
       # fonts
       nerd-fonts.fira-code
       nerd-fonts.fira-mono
+
+      # portable nix-switch command available across shells
+      (writeShellScriptBin "nix-switch" ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        if [ "$(uname)" = "Darwin" ]; then
+          exec sudo darwin-rebuild switch --flake "$HOME/.config/nix"
+        else
+          exec nix run home-manager/master -- switch --flake "$HOME/.config/nix#$USER"
+        fi
+      '')
     ];
   };
 }

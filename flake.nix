@@ -14,6 +14,10 @@
 
     # declarative homebrew management
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    # declarative flatpak management (pin stable release)
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
+
   };
 
   outputs =
@@ -23,10 +27,11 @@
       nixpkgs,
       home-manager,
       nix-homebrew,
+      nix-flatpak,
       ...
     }@inputs:
     let
-      username = "nebrelbug";
+      username = "bgub";
     in
     {
       # build darwin flake using:
@@ -38,6 +43,22 @@
           ./hosts/work-macbook/configuration.nix
         ];
         specialArgs = { inherit inputs self username; };
+      };
+
+      # Linux home-manager configuration (Fedora or other non-NixOS Linux)
+      # switch with:
+      # $ nix run home-manager/master -- switch --flake .#${username}
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
+        modules = [
+          inputs.nix-flatpak.homeManagerModules.nix-flatpak
+          ./home
+          ./linux
+        ];
+        extraSpecialArgs = { inherit inputs self username; };
       };
 
     };
