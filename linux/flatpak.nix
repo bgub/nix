@@ -14,11 +14,22 @@
 
     # Install user-scoped apps
     packages = [
-      { appId = "dev.zed.Zed"; origin = "flathub"; }
-      { appId = "com.spotify.Client"; origin = "flathub"; }
-      { appId = "md.obsidian.Obsidian"; origin = "flathub"; }
-      { appId = "org.signal.Signal"; origin = "flathub"; }
-      # Add more like: { appId = "com.visualstudio.code"; origin = "flathub"; }
+      {
+        appId = "dev.edfloreshz.CosmicTweaks";
+        origin = "flathub";
+      }
+      {
+        appId = "dev.DBrox.CosmicSystemMonitor";
+        origin = "flathub";
+      }
+      {
+        appId = "io.github.cosmic_utils.cosmic-ext-applet-clipboard-manager";
+        origin = "flathub";
+      }
+      {
+        appId = "dev.DBrox.CosmicSystemMonitor";
+        origin = "flathub";
+      }
     ];
 
     # Optionally auto-update on activation (can slow down switches)
@@ -26,8 +37,6 @@
   };
 
   # Simple symlink: make ~/.local/bin/zed point to the Flatpak-exported binary
-  home.file.".local/bin/zed".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.local/share/flatpak/exports/bin/dev.zed.Zed";
+  # home.file.".local/bin/zed".source =
+  # config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.local/share/flatpak/exports/bin/dev.zed.Zed";
 }
-
-

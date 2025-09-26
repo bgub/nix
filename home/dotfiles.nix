@@ -8,6 +8,15 @@ let
     "zed/settings.json" = "zed/settings.json";
     "zed/keymap.json" = "zed/keymap.json";
     "zed/tasks.json" = "zed/tasks.json";
+    "fontconfig/fonts.conf" = "fontconfig/fonts.conf";
+    "cosmic/com.system76.CosmicTerm/v1/font_name" = "cosmic/term_font_name";
+    "cosmic/com.system76.CosmicTerm/v1/show_headerbar" = "cosmic/term_show_headerbar";
+    "cosmic/com.system76.CosmicComp/v1/autotile" = "cosmic/autotile";
+    "cosmic/com.system76.CosmicComp/v1/xkb_config" = "cosmic/xkb_config";
+    "cosmic/com.system76.CosmicAppletTime/v1/military_time" = "cosmic/military_time";
+    "cosmic/com.system76.CosmicPanel/v1/entries" = "cosmic/panel_dock_entries";
+    "cosmic/com.system76.CosmicPanel.Panel/v1/plugins_center" = "cosmic/panel_plugins_center";
+    "cosmic/com.system76.CosmicPanel.Panel/v1/plugins_wings" = "cosmic/panel_plugins_wings";
     # "alacritty/alacritty.toml" = "alacritty/alacritty.toml";
   };
 
@@ -18,12 +27,4 @@ let
 in
 {
   xdg.configFile = toXdg;
-  # Also link the Flatpak Zed paths to the same repo files
-  home.file = {
-    ".var/app/dev.zed.Zed/config/zed/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/zed/settings.json";
-    ".var/app/dev.zed.Zed/config/zed/keymap.json".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/zed/keymap.json";
-    ".var/app/dev.zed.Zed/config/zed/tasks.json".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/zed/tasks.json";
-  };
 }
-
-

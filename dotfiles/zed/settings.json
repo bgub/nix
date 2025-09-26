@@ -41,11 +41,10 @@
     "light": "One Light",
     "dark": "One Dark"
   },
-  "title_bar": {
-    "show": "always"
-  },
   "tab_size": 2,
-
+  "terminal": {
+    "font_family": "FiraCode Nerd Font Mono"
+  },
   // SETUP
   "auto_install_extensions": {
     "html": true,
@@ -55,6 +54,7 @@
     "git-firefly": true
   },
   "telemetry": {
+    "diagnostics": false,
     "metrics": false
   }
 }
