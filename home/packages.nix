@@ -14,6 +14,8 @@
       gh
       zoxide
       lazygit
+      jujutsu
+      lazyjj
 
       # runtimes/toolchains managed via packages
       fnm # Node/pnpm via Corepack; run: fnm env --use-on-cd

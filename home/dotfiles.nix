@@ -7,9 +7,8 @@ let
     # Zed settings
     "zed/settings.json" = "zed/settings.json";
     "zed/keymap.json" = "zed/keymap.json";
-    # Add more entries here as needed, e.g.:
+    "zed/tasks.json" = "zed/tasks.json";
     # "alacritty/alacritty.toml" = "alacritty/alacritty.toml";
-    # "cursor/settings.json" = "cursor/settings.json";
   };
 
   toXdg = lib.mapAttrs (relPath: repoRel: {
@@ -23,6 +22,7 @@ in
   home.file = {
     ".var/app/dev.zed.Zed/config/zed/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/zed/settings.json";
     ".var/app/dev.zed.Zed/config/zed/keymap.json".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/zed/keymap.json";
+    ".var/app/dev.zed.Zed/config/zed/tasks.json".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/zed/tasks.json";
   };
 }
 

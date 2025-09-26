@@ -17,27 +17,19 @@
   "vim_mode": true,
   "base_keymap": "VSCode",
   "format_on_save": "on",
+  "code_actions_on_format": {
+    "source.fixAll.biome": true,
+    "source.organizeImports.biome": true
+  },
   "languages": {
     "JavaScript": {
-      "formatter": { "language_server": { "name": "biome" } },
-      "code_actions_on_format": {
-        "source.fixAll.biome": true,
-        "source.organizeImports.biome": true
-      }
+      "formatter": { "language_server": { "name": "biome" } }
     },
     "TypeScript": {
-      "formatter": { "language_server": { "name": "biome" } },
-      "code_actions_on_format": {
-        "source.fixAll.biome": true,
-        "source.organizeImports.biome": true
-      }
+      "formatter": { "language_server": { "name": "biome" } }
     },
     "TSX": {
-      "formatter": { "language_server": { "name": "biome" } },
-      "code_actions_on_format": {
-        "source.fixAll.biome": true,
-        "source.organizeImports.biome": true
-      }
+      "formatter": { "language_server": { "name": "biome" } }
     }
   },
 
@@ -50,7 +42,7 @@
     "dark": "One Dark"
   },
   "title_bar": {
-    // "show": "hide_in_full_screen"
+    "show": "always"
   },
   "tab_size": 2,
 
