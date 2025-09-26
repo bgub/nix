@@ -13,6 +13,7 @@
       eza
       gh
       zoxide
+      lazygit
 
       # runtimes/toolchains managed via packages
       fnm # Node/pnpm via Corepack; run: fnm env --use-on-cd

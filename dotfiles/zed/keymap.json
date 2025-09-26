@@ -1,21 +1,65 @@
-// Zed keymap
-//
-// For information on binding keys, see the Zed
-// documentation: https://zed.dev/docs/key-bindings
-//
-// To see the default key bindings run `zed: open default keymap`
-// from the command palette.
+// LazyZed keymap
+// Inspired by https://gist.github.com/oca159/0b480ed6555056418905b6e59af33674
 [
+  // Navigation
   {
-    "context": "Workspace",
+    "context": "Dock || Terminal || Editor",
     "bindings": {
-      // "shift shift": "file_finder::Toggle"
+      // Window motions
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
+    }
+  },
+  // Leader key commands
+  {
+    "context": "EmptyPane || SharedScreen",
+    "bindings": {
+      "space space": "file_finder::Toggle",
+      "space f n": "workspace::NewFile",
+      "space f p": "projects::OpenRecent",
+      "space s g": "workspace::NewSearch",
+      "space q q": "zed::Quit",
+      "space g g": [
+        "task::Spawn",
+        {
+          "task_name": "lazygit",
+          "reveal_target": "center"
+        }
+      ]
     }
   },
   {
-    "context": "Editor && vim_mode == insert",
+    "context": "Editor && VimControl && !VimWaiting && !menu",
     "bindings": {
-      // "j k": "vim::NormalBefore"
+      "space space": "file_finder::Toggle",
+      "space f n": "workspace::NewFile",
+      "space f p": "projects::OpenRecent",
+      "space s g": "workspace::NewSearch",
+      "space q q": "zed::Quit",
+      "space g g": [
+        "task::Spawn",
+        {
+          "task_name": "lazygit",
+          "reveal_target": "center"
+        }
+      ],
+      // Pane
+      "space w d": "pane::CloseAllItems",
+      "space -": "pane::SplitDown",
+      "space |": "pane::SplitRight",
+      // User toggles
+      "space u i": "editor::ToggleInlayHints",
+      "space u w": "editor::ToggleSoftWrap",
+
+      // Buffer
+      // Git hunk
+      // Markdown
+      "space m p": "markdown::OpenPreview",
+      "space m P": "markdown::OpenPreviewToTheSide"
+
+      // Search
     }
   }
 ]
