@@ -15,10 +15,16 @@ _: {
       # helper to quickly reload shell config
       reload-zsh() { exec "$SHELL" -l; }
 
-      # Initialize fnm (Fast Node Manager)
+      # initialize fnm (Fast Node Manager)
       if command -v fnm >/dev/null 2>&1; then
         eval "$(fnm env --use-on-cd)"
       fi
+
+      # Ctrl+Left / Ctrl+Right for word movement (insert + normal modes)
+      bindkey -M viins '^[[1;5D' backward-word
+      bindkey -M viins '^[[1;5C' forward-word
+      bindkey -M vicmd '^[[1;5D' backward-word
+      bindkey -M vicmd '^[[1;5C' forward-word
     '';
   };
 

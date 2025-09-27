@@ -15,6 +15,8 @@ _: {
       init = {
         defaultBranch = "main";
       };
+
+      credential.helper = ''!gh auth git-credential'';
     };
   };
 }
