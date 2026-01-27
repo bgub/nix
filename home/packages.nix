@@ -25,7 +25,7 @@
       rustup
 
       # misc
-      nil
+      nixd
       biome
       nixfmt-rfc-style
       yt-dlp
@@ -35,6 +35,7 @@
       # fonts
       nerd-fonts.fira-code
       nerd-fonts.fira-mono
+      nerd-fonts.droid-sans-mono
 
       # portable nix-switch command available across shells
       (writeShellScriptBin "nix-switch" ''

@@ -17,6 +17,7 @@ let
     "cosmic/com.system76.CosmicPanel/v1/entries" = "cosmic/panel_dock_entries";
     "cosmic/com.system76.CosmicPanel.Panel/v1/plugins_center" = "cosmic/panel_plugins_center";
     "cosmic/com.system76.CosmicPanel.Panel/v1/plugins_wings" = "cosmic/panel_plugins_wings";
+    "cosmic/com.system76.CosmicSettings.Shortcuts/v1/custom" = "cosmic/shortcuts_custom";
     # "alacritty/alacritty.toml" = "alacritty/alacritty.toml";
   };
 
