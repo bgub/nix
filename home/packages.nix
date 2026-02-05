@@ -44,7 +44,7 @@
         if [ "$(uname)" = "Darwin" ]; then
           exec sudo darwin-rebuild switch --flake "$HOME/.config/nix"
         else
-          exec nix run home-manager/master -- switch --flake "$HOME/.config/nix#$USER"
+          exec nix run home-manager/master -- switch --flake "$HOME/.config/nix#$USER" -b backup
         fi
       '')
     ];
