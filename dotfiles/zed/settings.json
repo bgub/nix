@@ -2,6 +2,9 @@
 // documentation: https://zed.dev/docs/configuring-zed
 {
   "show_completions_on_input": false,
+  "gutter": {
+    "min_line_number_digits": 2,
+  },
   "show_edit_predictions": false,
   "edit_predictions": {
     "enabled_in_text_threads": false,
@@ -34,20 +37,24 @@
     "Nix": {
       "language_servers": ["nixd", "!nil"],
     },
+    "Rust": {
+      "tab_size": 4,
+    },
   },
 
   // STYLES
   "icon_theme": "VSCode Icons for Zed (Light)",
   "ui_font_family": ".SystemUIFont",
   "ui_font_size": 16,
-  "buffer_font_family": "DroidSansM Nerd Font Mono",
-  "buffer_font_size": 14,
-  "buffer_font_weight": 600,
+  "buffer_font_family": "DejaVu Sans Mono",
+  "buffer_font_size": 16,
+  "buffer_font_weight": 400,
+  "buffer_line_height": "standard",
 
   "theme": {
-    "mode": "light",
-    "light": "Vercel Light",
-    "dark": "One Dark",
+    "mode": "dark",
+    "light": "VSCode Light+",
+    "dark": "Ayu Dark",
   },
   "tab_size": 2,
   "terminal": {
