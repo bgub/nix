@@ -4,5 +4,9 @@
     ./flatpak.nix
   ];
 
-  # Linux-specific environment tweaks can go here later
+  # Linux-specific environment tweaks
+  home.sessionPath = [
+    "$HOME/.termcast/compiled/tuitube/bin"
+    "$HOME/.opencode/bin"
+  ];
 }

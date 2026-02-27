@@ -43,6 +43,8 @@
         set -euo pipefail
         if [ "$(uname)" = "Darwin" ]; then
           exec sudo darwin-rebuild switch --flake "$HOME/.config/nix"
+        elif [ -f /etc/NIXOS ]; then
+          exec sudo nixos-rebuild switch --flake "$HOME/.config/nix"
         else
           exec nix run home-manager/master -- switch --flake "$HOME/.config/nix#$USER" -b backup
         fi

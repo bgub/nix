@@ -44,7 +44,18 @@
         specialArgs = { inherit inputs self username; };
       };
 
-      # Linux home-manager configuration (Fedora or other non-NixOS Linux)
+      # NixOS system configuration
+      # switch with:
+      # $ sudo nixos-rebuild switch --flake .#<hostname>
+      nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./nixos
+        ];
+        specialArgs = { inherit inputs self username; };
+      };
+
+      # Standalone home-manager (non-NixOS Linux, e.g. Fedora)
       # switch with:
       # $ nix run home-manager/master -- switch --flake .#${username}
       homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
