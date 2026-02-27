@@ -28,4 +28,18 @@ let
 in
 {
   xdg.configFile = toXdg;
+
+  # Files under ~/.claude (not XDG, so use home.file)
+  home.file = {
+    # Claude Code skills
+    ".claude/skills/refactor/SKILL.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/skills/refactor/SKILL.md";
+    ".claude/skills/push/SKILL.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/skills/push/SKILL.md";
+    ".claude/skills/examine/SKILL.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/skills/examine/SKILL.md";
+    ".claude/skills/rebase/SKILL.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/skills/rebase/SKILL.md";
+    ".claude/skills/squash/SKILL.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/skills/squash/SKILL.md";
+    ".claude/skills/eval-issues/SKILL.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/skills/eval-issues/SKILL.md";
+    ".claude/skills/fresh-branch/SKILL.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/skills/fresh-branch/SKILL.md";
+    # Claude Code agents
+    ".claude/agents/eval-issue.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/agents/eval-issue.md";
+  };
 }
