@@ -21,6 +21,7 @@
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
+  boot.blacklistedKernelModules = [ "spd5118" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
@@ -28,10 +29,14 @@
     fsType = "ext4";
   };
 
-  boot.initrd.luks.devices."luks-42518c6f-02b1-4755-be91-75aef3be40ca".device =
-    "/dev/disk/by-uuid/42518c6f-02b1-4755-be91-75aef3be40ca";
-  boot.initrd.luks.devices."luks-f8e136e5-0fd2-46e1-9bdf-0c5b428b02b0".device =
-    "/dev/disk/by-uuid/f8e136e5-0fd2-46e1-9bdf-0c5b428b02b0";
+  boot.initrd.luks.devices."luks-42518c6f-02b1-4755-be91-75aef3be40ca" = {
+    device = "/dev/disk/by-uuid/42518c6f-02b1-4755-be91-75aef3be40ca";
+    allowDiscards = true;
+  };
+  boot.initrd.luks.devices."luks-f8e136e5-0fd2-46e1-9bdf-0c5b428b02b0" = {
+    device = "/dev/disk/by-uuid/f8e136e5-0fd2-46e1-9bdf-0c5b428b02b0";
+    allowDiscards = true;
+  };
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/D159-F343";

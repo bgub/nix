@@ -18,6 +18,7 @@
       jujutsu
       lazyjj
       claude-code
+      opencode
 
       # runtimes/toolchains managed via packages
       fnm # Node/pnpm via Corepack; run: fnm env --use-on-cd
@@ -30,6 +31,10 @@
       brave
       zed-editor
       code-cursor
+      obsidian
+      flameshot
+      obs-studio
+      kooha
 
       # misc
       nixd

@@ -13,6 +13,7 @@
 
     powerManagement.enable = true;
     powerManagement.finegrained = false;
+    nvidiaPersistenced = true;
 
     prime = {
       offload = {

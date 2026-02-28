@@ -80,11 +80,13 @@
                   home-manager.useUserPackages = true;
                   home-manager.users.${username} = {
                     imports = [
+                      inputs.nix-flatpak.homeManagerModules.nix-flatpak
                       ./home/shell.nix
                       ./home/packages.nix
                       ./home/git.nix
                       ./home/nvim.nix
                       ./home/dotfiles.nix
+                      ./linux/flatpak.nix
                     ];
                     home.username = username;
                     home.homeDirectory = "/home/${username}";

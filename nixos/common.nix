@@ -5,10 +5,11 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.timeout = 1;
+  boot.loader.timeout = 0;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.initrd.systemd.enable = true;
+  boot.plymouth.enable = true;
 
   # ── networking ────────────────────────────────────────────────────────
   networking.networkmanager.enable = true;
@@ -20,6 +21,10 @@
 
   # ── desktop (COSMIC) ─────────────────────────────────────────────────
   services.displayManager.cosmic-greeter.enable = true;
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "bgub";
+  };
   services.desktopManager.cosmic.enable = true;
   services.system76-scheduler.enable = true;
 
@@ -50,6 +55,7 @@
   programs.zsh.enable = true;
   programs.firefox.enable = true;
   programs.nix-ld.enable = true;
+  services.flatpak.enable = true;
 
   # ── Nix settings ─────────────────────────────────────────────────────
   nixpkgs.config.allowUnfree = true;
@@ -63,6 +69,9 @@
     options = "--delete-older-than 14d";
   };
   nix.optimise.automatic = true;
+
+  # ── firmware updates ─────────────────────────────────────────────
+  services.fwupd.enable = true;
 
   # ── power / battery ──────────────────────────────────────────────────
   services.thermald.enable = true;

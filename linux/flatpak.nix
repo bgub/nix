@@ -19,10 +19,6 @@
     # Install user-scoped apps
     packages = [
       {
-        appId = "org.flameshot.Flameshot";
-        origin = "flathub";
-      }
-      {
         appId = "dev.edfloreshz.CosmicTweaks";
         origin = "flathub";
       }
