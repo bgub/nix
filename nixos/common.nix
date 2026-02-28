@@ -27,6 +27,7 @@
   };
   services.desktopManager.cosmic.enable = true;
   services.system76-scheduler.enable = true;
+  environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
 
   # ── audio (PipeWire) ──────────────────────────────────────────────────
   security.rtkit.enable = true;
@@ -54,15 +55,19 @@
   # ── programs ──────────────────────────────────────────────────────────
   programs.zsh.enable = true;
   programs.firefox.enable = true;
+  programs.firefox.preferences."widget.gtk.libadwaita-colors.enabled" = false;
   programs.nix-ld.enable = true;
   services.flatpak.enable = true;
 
   # ── Nix settings ─────────────────────────────────────────────────────
   nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix.settings = {
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    max-jobs = "auto";
+  };
   nix.gc = {
     automatic = true;
     dates = "weekly";

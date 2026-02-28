@@ -61,6 +61,15 @@
           exec nix run home-manager/master -- switch --flake "$HOME/.config/nix#$USER"
         fi
       '')
+
+      # update flake inputs then rebuild
+      (writeShellScriptBin "nix-update" ''
+        set -euo pipefail
+        echo "Updating flake inputs..."
+        nix flake update --flake "$HOME/.config/nix"
+        echo "Rebuilding..."
+        exec nix-switch
+      '')
     ];
   };
 }
