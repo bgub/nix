@@ -45,8 +45,8 @@
   "buffer_font_weight": 600,
 
   "theme": {
-    "mode": "light",
-    "light": "Vercel Light",
+    "mode": "dark",
+    "light": "VSCode Light+",
     "dark": "One Dark",
   },
   "tab_size": 2,
