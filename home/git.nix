@@ -1,22 +1,17 @@
 _: {
   programs.git = {
     enable = true;
-    userName = "Ben Gubler";
-    userEmail = "me@bengubler.com";
-
     lfs.enable = true;
-
     ignores = [ "**/.DS_STORE" ];
 
-    extraConfig = {
-      github = {
-        user = "bgub";
+    settings = {
+      user = {
+        name = "Ben Gubler";
+        email = "me@bengubler.com";
       };
-      init = {
-        defaultBranch = "main";
-      };
-
-      credential.helper = ''!gh auth git-credential'';
+      github.user = "bgub";
+      init.defaultBranch = "main";
+      credential.helper = "!gh auth git-credential";
     };
   };
 }

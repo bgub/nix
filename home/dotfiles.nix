@@ -2,7 +2,7 @@
 let
   repoRoot = "${config.home.homeDirectory}/.config/nix/dotfiles";
 
-  # Map of XDG config-relative paths -> repo-relative paths
+  # map of XDG config-relative paths -> repo-relative paths
   files = {
     # Zed settings
     "zed/settings.json" = "zed/settings.json";
@@ -23,7 +23,7 @@ let
 
   toXdg = lib.mapAttrs (relPath: repoRel: {
     source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/${repoRel}";
-    # no 'force' so Home Manager errors if a file already exists
+    force = true;
   }) files;
 in
 {
