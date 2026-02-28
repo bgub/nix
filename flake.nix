@@ -60,5 +60,54 @@
         extraSpecialArgs = { inherit inputs self username; };
       };
 
+      # NixOS hosts — compose modules per machine
+      # switch with: sudo nixos-rebuild switch --flake ~/.config/nix
+      nixosConfigurations =
+        let
+          mkHost = { hostName, extraModules ? [ ], stateVersion ? "25.11" }:
+            nixpkgs.lib.nixosSystem {
+              system = "x86_64-linux";
+              modules = [
+                ./nixos/common.nix
+                home-manager.nixosModules.home-manager
+                {
+                  networking.hostName = hostName;
+                  system.stateVersion = stateVersion;
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  home-manager.users.${username} = {
+                    imports = [
+                      ./home/shell.nix
+                      ./home/packages.nix
+                      ./home/git.nix
+                      ./home/nvim.nix
+                      ./home/dotfiles.nix
+                    ];
+                    home.username = username;
+                    home.homeDirectory = "/home/${username}";
+                    home.stateVersion = "25.05";
+                    programs.home-manager.enable = true;
+                  };
+                }
+              ] ++ extraModules;
+              specialArgs = { inherit inputs username; };
+            };
+        in
+        {
+          xps15 = mkHost {
+            hostName = "xps15";
+            extraModules = [
+              ./nixos/hardware-xps15.nix
+              ./nixos/nvidia.nix
+            ];
+          };
+
+          # to add another host:
+          # thinkpad-2 = mkHost {
+          #   hostName = "thinkpad-2";
+          #   extraModules = [ ./nixos/hardware-thinkpad-2.nix ];
+          # };
+        };
+
     };
 }
