@@ -39,7 +39,10 @@
   users.users.bgub = {
     isNormalUser = true;
     description = "Ben Gubler";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     shell = pkgs.zsh;
   };
 
@@ -50,7 +53,10 @@
 
   # ── Nix settings ─────────────────────────────────────────────────────
   nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nix.gc = {
     automatic = true;
     dates = "weekly";

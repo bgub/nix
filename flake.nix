@@ -1,5 +1,5 @@
 {
-  description = "My system configuration";
+  description = "bgub's system configuration";
   inputs = {
     # monorepo w/ recipes ("derivations")
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -26,8 +26,6 @@
       darwin,
       nixpkgs,
       home-manager,
-      nix-homebrew,
-      nix-flatpak,
       ...
     }@inputs:
     let
@@ -64,7 +62,12 @@
       # switch with: sudo nixos-rebuild switch --flake ~/.config/nix
       nixosConfigurations =
         let
-          mkHost = { hostName, extraModules ? [ ], stateVersion ? "25.11" }:
+          mkHost =
+            {
+              hostName,
+              extraModules ? [ ],
+              stateVersion ? "25.11",
+            }:
             nixpkgs.lib.nixosSystem {
               system = "x86_64-linux";
               modules = [
@@ -89,7 +92,8 @@
                     programs.home-manager.enable = true;
                   };
                 }
-              ] ++ extraModules;
+              ]
+              ++ extraModules;
               specialArgs = { inherit inputs username; };
             };
         in
