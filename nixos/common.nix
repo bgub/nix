@@ -28,6 +28,7 @@
   services.desktopManager.cosmic.enable = true;
   services.system76-scheduler.enable = true;
   environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
+  environment.localBinInPath = true;
 
   # ── audio (PipeWire) ──────────────────────────────────────────────────
   security.rtkit.enable = true;

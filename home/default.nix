@@ -20,4 +20,13 @@
     # create .hushlogin file to suppress login messages
     file.".hushlogin".text = "";
   };
+
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+    desktop = null;
+    templates = null;
+    music = null;
+    publicShare = null;
+  };
 }
