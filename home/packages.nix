@@ -26,6 +26,8 @@
       deno
       uv
       rustup
+      just
+      cargo-generate
 
       # apps
       brave
@@ -35,6 +37,9 @@
       flameshot
       obs-studio
       kooha
+      zotero
+      baobab
+      popsicle
 
       # misc
       nixd
@@ -69,6 +74,11 @@
         nix flake update --flake "$HOME/.config/nix"
         echo "Rebuilding..."
         exec nix-switch
+      '')
+
+      # enter a shell with cosmic applet build deps
+      (writeShellScriptBin "cosmic-dev" ''
+        exec nix-shell "$HOME/.config/nix/cosmic-shell.nix"
       '')
     ];
   };
