@@ -1,10 +1,9 @@
 {
     (
-        modifiers: [
-            Ctrl,
-        ],
+        modifiers: [],
         key: "Print",
-    ): Spawn("flatpak run org.flameshot.Flameshot gui"),
+        description: Some("Screenshot"),
+    ): Spawn("flameshot gui --clipboard"),
     (
         modifiers: [
             Super,
@@ -18,4 +17,19 @@
         ],
         key: "backslash",
     ): Minimize,
+    (
+        modifiers: [
+            Alt,
+        ],
+        key: "space",
+        description: Some("Voice to text"),
+    ): Spawn("voxtype record toggle"),
+    // TODO: add keybinding for record app once packaged (~/code/record)
+    // (
+    //     modifiers: [
+    //         Alt,
+    //     ],
+    //     key: "Print",
+    //     description: Some("Toggle screen recording"),
+    // ): Spawn("record --with-desktop-audio"),
 }
