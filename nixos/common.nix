@@ -58,6 +58,9 @@
   programs.firefox.enable = true;
   programs.firefox.preferences."widget.gtk.libadwaita-colors.enabled" = false;
   programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    glib
+  ];
   services.flatpak.enable = true;
 
   # ── Nix settings ─────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   home = {
     packages = with pkgs; [
@@ -30,12 +30,17 @@
       cargo-generate
 
       # apps
+      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
       brave
       zed-editor
+      helix
+      ladybird
       code-cursor
       obsidian
-      flameshot
+      grim
       obs-studio
+      gpu-screen-recorder
+      voxtype
       kooha
       zotero
       baobab
@@ -47,6 +52,7 @@
       nixfmt
       yt-dlp
       ffmpeg
+      wl-clipboard
       ollama
 
       # fonts
@@ -81,5 +87,20 @@
         exec nix-shell "$HOME/.config/nix/cosmic-shell.nix"
       '')
     ];
+  };
+
+  services.flameshot = {
+    enable = true;
+    settings.General = {
+      useGrimAdapter = true;
+      disabledGrimWarning = true;
+      disabledTrayIcon = true;
+      showStartupLaunchMessage = false;
+      contrastOpacity = 100;
+      copyOnDoubleClick = true;
+      showSidePanelButton = false;
+      showHelp = false;
+      showAbortNotification = false;
+    };
   };
 }

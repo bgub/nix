@@ -18,6 +18,10 @@
     # declarative flatpak management (pin stable release)
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
 
+    # zen browser
+    zen-browser.url = "github:youwen5/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs =
@@ -71,6 +75,24 @@
             nixpkgs.lib.nixosSystem {
               system = "x86_64-linux";
               modules = [
+                {
+                  nixpkgs.overlays = [
+                    (final: prev: {
+                      cosmic-term = prev.cosmic-term.overrideAttrs (old: {
+                        patches = (old.patches or [ ]) ++ [
+                          (final.fetchpatch {
+                            url = "https://github.com/pop-os/cosmic-term/pull/724.patch";
+                            hash = "sha256-YAMY1fHSEODyl0570UkNIZ5GiPuAPTMJRgX9g2MpUAY=";
+                          })
+                          (final.fetchpatch {
+                            url = "https://github.com/pop-os/cosmic-term/pull/725.patch";
+                            hash = "sha256-JsH5UMUub5Xo4gWz3X8TtrRO9F3BCr0SDyr6yIxOJds=";
+                          })
+                        ];
+                      });
+                    })
+                  ];
+                }
                 ./nixos/common.nix
                 home-manager.nixosModules.home-manager
                 {
@@ -78,6 +100,7 @@
                   system.stateVersion = stateVersion;
                   home-manager.useGlobalPkgs = true;
                   home-manager.useUserPackages = true;
+                  home-manager.extraSpecialArgs = { inherit inputs; };
                   home-manager.users.${username} = {
                     imports = [
                       inputs.nix-flatpak.homeManagerModules.nix-flatpak
