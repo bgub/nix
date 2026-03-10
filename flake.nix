@@ -18,6 +18,12 @@
     # declarative flatpak management (pin stable release)
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
 
+    cosmic-manager = {
+      url = "github:HeitorAugustoLN/cosmic-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # zen browser
     zen-browser.url = "github:youwen5/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
@@ -56,8 +62,10 @@
         };
         modules = [
           inputs.nix-flatpak.homeManagerModules.nix-flatpak
+          inputs.cosmic-manager.homeManagerModules.cosmic-manager
           ./home
           ./linux
+          ./home/cosmic.nix
         ];
         extraSpecialArgs = { inherit inputs self username; };
       };
@@ -104,11 +112,13 @@
                   home-manager.users.${username} = {
                     imports = [
                       inputs.nix-flatpak.homeManagerModules.nix-flatpak
+                      inputs.cosmic-manager.homeManagerModules.cosmic-manager
                       ./home/shell.nix
                       ./home/packages.nix
                       ./home/git.nix
                       ./home/nvim.nix
                       ./home/dotfiles.nix
+                      ./home/cosmic.nix
                       ./linux/flatpak.nix
                     ];
                     home.username = username;
