@@ -1,11 +1,15 @@
 // Zed Helix-mode keymap
 // Only contains Zed-specific additions to Helix defaults
 //
-// Panel toggles (work everywhere):
-//   ctrl-]   Project panel
-//   ctrl-}   Git panel
-//   ctrl-\   Agent panel
-//   ctrl-/   Terminal
+// Mode-agnostic (work in helix, vim, vanilla):
+//   ctrl-]         Project panel
+//   ctrl-}         Git panel
+//   ctrl-\         Agent panel
+//   ctrl-/         Terminal
+//   ctrl-s         Save
+//   ctrl-shift-s   Save without formatting
+//   ctrl-tab       Next buffer
+//   ctrl-shift-tab Previous buffer
 [
   // Panel toggles (default: open/focus)
   {
@@ -15,6 +19,8 @@
       "ctrl-}": "git_panel::ToggleFocus",
       "ctrl-\\": "agent::ToggleFocus",
       "ctrl-/": "workspace::ToggleBottomDock",
+      "ctrl-tab": "pane::ActivateNextItem",
+      "ctrl-shift-tab": "pane::ActivatePreviousItem",
     },
   },
   // Panel toggles (override: close/switch when already in panel)
@@ -76,15 +82,24 @@
       ],
     },
   },
-  // Leader key commands (Editor)
+  // Mode-agnostic editor bindings (helix, vim, vanilla)
   {
-    "context": "vim_mode == helix_normal && !menu",
+    "context": "Editor",
     "bindings": {
-      // Panels (override Helix defaults like ctrl-] go-to-definition)
       "ctrl-]": "project_panel::ToggleFocus",
       "ctrl-}": "git_panel::ToggleFocus",
       "ctrl-\\": "agent::ToggleFocus",
       "ctrl-/": "workspace::ToggleBottomDock",
+      "ctrl-s": "workspace::Save",
+      "ctrl-shift-s": "workspace::SaveWithoutFormat",
+      "ctrl-tab": "pane::ActivateNextItem",
+      "ctrl-shift-tab": "pane::ActivatePreviousItem",
+    },
+  },
+  // Leader key commands (Editor)
+  {
+    "context": "vim_mode == helix_normal && !menu",
+    "bindings": {
       // Projects
       "space o": "projects::OpenRecent",
       "space O": "workspace::Open",
@@ -123,6 +138,15 @@
       "space m P": "markdown::OpenPreview",
       // AI
       "ctrl-l": "assistant::InlineAssist",
+    },
+  },
+  // Project search navigation
+  {
+    "context": "vim_mode == helix_normal && multibuffer && !menu",
+    "bindings": {
+      "n": "search::SelectNextMatch",
+      "shift-n": "search::SelectPreviousMatch",
+      "escape": "pane::CloseActiveItem",
     },
   },
   // Move lines
