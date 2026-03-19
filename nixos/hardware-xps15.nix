@@ -3,6 +3,7 @@
   config,
   lib,
   modulesPath,
+  pkgs,
   ...
 }:
 
@@ -11,6 +12,9 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
+  # Keep the rest of nixpkgs on unstable, but use the stable kernel series
+  # on this machine to reduce suspend/resume regressions.
+  boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "thunderbolt"
@@ -23,6 +27,26 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.blacklistedKernelModules = [ "spd5118" ];
   boot.extraModulePackages = [ ];
+  boot.kernelParams = [ "pcie_aspm.policy=powersave" ];
+  boot.kernel.sysctl."vm.swappiness" = 10;
+  boot.resumeDevice = "/dev/mapper/luks-f8e136e5-0fd2-46e1-9bdf-0c5b428b02b0";
+
+  # ── suspend/resume fixes ────────────────────────────────────────────
+  networking.networkmanager.wifi.powersave = true;
+
+  # This XPS 15 only exposes s2idle, so lid-close hibernate is more reliable
+  # than suspend-then-hibernate and avoids hot-bag battery drain.
+  services.logind.settings.Login = {
+    HandleLidSwitch = "hibernate";
+    HandleLidSwitchExternalPower = "hibernate";
+    HandleLidSwitchDocked = "ignore";
+  };
+
+  systemd.sleep.settings.Sleep = {
+    AllowSuspend = true;
+    AllowHibernation = true;
+    AllowSuspendThenHibernate = false;
+  };
 
   fileSystems."/" = {
     device = "/dev/mapper/luks-42518c6f-02b1-4755-be91-75aef3be40ca";

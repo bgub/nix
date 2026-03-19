@@ -11,9 +11,9 @@
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.production;
 
+    # Keep the laptop dGPU eligible for runtime suspend when it is idle.
     powerManagement.enable = true;
     powerManagement.finegrained = false;
-    nvidiaPersistenced = true;
 
     prime = {
       offload = {
