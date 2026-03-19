@@ -44,5 +44,6 @@ pkgs.mkShell {
     ++ [ "-C link-arg=-Wl,--pop-state" ]
   );
 
-  LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath runtimeLibs;
+  LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath runtimeLibs
+    + ":/run/opengl-driver/lib";
 }
