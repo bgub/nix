@@ -14,6 +14,7 @@
   # ── networking ────────────────────────────────────────────────────────
   networking.networkmanager.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
+  networking.firewall.allowedTCPPorts = [ 8081 ];
 
   # ── locale & time ────────────────────────────────────────────────────
   time.timeZone = "America/Denver";
@@ -60,7 +61,33 @@
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
     glib
+    nspr
+    nss
+    dbus
+    atk
+    at-spi2-atk
+    at-spi2-core
+    cups
+    cairo
+    pango
+    gtk3
+    mesa
+    libdrm
+    libgbm
+    expat
+    libxkbcommon
+    udev
+    alsa-lib
+    libx11
+    libxcomposite
+    libxdamage
+    libxext
+    libxfixes
+    libxrandr
+    libxcb
   ];
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true;
   services.flatpak.enable = true;
 
   # ── Nix settings ─────────────────────────────────────────────────────
@@ -84,6 +111,10 @@
 
   # ── power / battery ──────────────────────────────────────────────────
   services.thermald.enable = true;
+
+  # ── iPhone USB ────────────────────────────────────────────────────────
+  services.usbmuxd.enable = true;
+  environment.systemPackages = with pkgs; [ libimobiledevice ifuse ];
 
   # ── Tailscale ─────────────────────────────────────────────────────────
   services.tailscale.enable = true;
