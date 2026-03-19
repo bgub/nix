@@ -89,8 +89,8 @@
                       cosmic-term = prev.cosmic-term.overrideAttrs (old: {
                         patches = (old.patches or [ ]) ++ [
                           (final.fetchpatch {
-                            url = "https://github.com/pop-os/cosmic-term/pull/724.patch";
-                            hash = "sha256-YAMY1fHSEODyl0570UkNIZ5GiPuAPTMJRgX9g2MpUAY=";
+                            url = "https://github.com/pop-os/cosmic-term/pull/754.patch";
+                            hash = "sha256-F1+qoes4URdUstVDp8WYGPaSe/MiEDpAg86Ff3j+NHo=";
                           })
                           (final.fetchpatch {
                             url = "https://github.com/pop-os/cosmic-term/pull/725.patch";
