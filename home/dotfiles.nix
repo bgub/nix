@@ -9,6 +9,8 @@ let
     "zed/keymap.json" = "zed/keymap.json";
     "zed/tasks.json" = "zed/tasks.json";
     "fontconfig/fonts.conf" = "fontconfig/fonts.conf";
+    "aerospace/aerospace.toml" = "aerospace/aerospace.toml";
+    "karabiner/karabiner.json" = "karabiner/karabiner.json";
     # "alacritty/alacritty.toml" = "alacritty/alacritty.toml";
   };
 

@@ -52,6 +52,14 @@
         specialArgs = { inherit inputs self username; };
       };
 
+      darwinConfigurations."mac-mini" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ./darwin
+        ];
+        specialArgs = { inherit inputs self username; };
+      };
+
       # Linux home-manager configuration (Fedora or other non-NixOS Linux)
       # switch with:
       # $ nix run home-manager/master -- switch --flake .#${username}
@@ -119,7 +127,7 @@
                       ./home/nvim.nix
                       ./home/dotfiles.nix
                       ./home/cosmic.nix
-                      ./linux/flatpak.nix
+                      ./linux
                     ];
                     home.username = username;
                     home.homeDirectory = "/home/${username}";

@@ -114,7 +114,45 @@
 
   # ── iPhone USB ────────────────────────────────────────────────────────
   services.usbmuxd.enable = true;
-  environment.systemPackages = with pkgs; [ libimobiledevice ifuse ];
+  environment.systemPackages = with pkgs; [
+    # iPhone USB
+    libimobiledevice
+    ifuse
+
+    # GUI apps
+    brave
+    vivaldi
+    alacritty
+    kitty
+    zed-editor
+    code-cursor
+    ladybird
+    libreoffice
+    obsidian
+    zotero
+    godot_4
+    google-chrome
+
+    # Wayland / COSMIC tools
+    grim
+    wl-clipboard
+    gpu-screen-recorder
+    voxtype
+    kooha
+    baobab
+    popsicle
+
+    # dev tools
+    gcc
+    qemu
+    unixtools.xxd
+    ollama
+    opencode
+    opencode-desktop
+
+    # cross-compilation
+    pkgsCross.riscv64-embedded.buildPackages.gcc
+  ];
 
   # ── Tailscale ─────────────────────────────────────────────────────────
   services.tailscale.enable = true;

@@ -4,7 +4,7 @@
     enable = true;
 
     onActivation = {
-      autoUpdate = false;
+      autoUpdate = true;
       upgrade = true;
       cleanup = "zap";
     };
@@ -16,9 +16,12 @@
     # nixpkgs is best for CLI tools
     casks = [
       # OS enhancements
-      "aerospace"
+      "nikitabobko/tap/aerospace"
+      "ollama"
+      "opencode-desktop"
       "cleanshot"
       "hiddenbar"
+      "karabiner-elements"
       "raycast"
       "betterdisplay"
 
@@ -39,6 +42,7 @@
       "brave-browser"
       "obsidian"
       "protonvpn"
+      "tailscale"
       "spotify"
       "thebrowsercompany-dia"
       "zen"
@@ -46,9 +50,13 @@
     brews = [
       "docker"
       "colima"
+      "anomalyco/tap/opencode"
+      "FelixKratz/formulae/borders"
     ];
     taps = [
       "nikitabobko/tap"
+      "anomalyco/tap"
+      "FelixKratz/formulae"
     ];
   };
 }
