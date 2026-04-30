@@ -17,7 +17,7 @@
     casks = [
       # OS enhancements
       "nikitabobko/tap/aerospace"
-      "ollama"
+      "ollama-app"
       "opencode-desktop"
       "cleanshot"
       "hiddenbar"
@@ -40,9 +40,11 @@
       "1password"
       "anki"
       "brave-browser"
+      "notion"
       "obsidian"
+      "proton-pass"
       "protonvpn"
-      "tailscale"
+      "tailscale-app"
       "spotify"
       "thebrowsercompany-dia"
       "zen"
