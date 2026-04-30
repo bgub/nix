@@ -11,6 +11,7 @@ let
     "fontconfig/fonts.conf" = "fontconfig/fonts.conf";
     "aerospace/aerospace.toml" = "aerospace/aerospace.toml";
     "karabiner/karabiner.json" = "karabiner/karabiner.json";
+    "ghostty/config.ghostty" = "ghostty/config.ghostty";
     # "alacritty/alacritty.toml" = "alacritty/alacritty.toml";
   };
 
@@ -36,5 +37,9 @@ in
     ".claude/agents/eval-issue.md".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/claude/agents/eval-issue.md";
     # Shared skills for other agents (e.g. Codex)
     ".agents/skills".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/skills";
+    "Library/Application Support/com.mitchellh.ghostty/config.ghostty" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/ghostty/config.ghostty";
+      force = true;
+    };
   };
 }

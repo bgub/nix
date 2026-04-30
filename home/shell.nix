@@ -22,11 +22,17 @@
         eval "$(fnm env --use-on-cd)"
       fi
 
-      # Ctrl+Left / Ctrl+Right for word movement (insert + normal modes)
-      bindkey -M viins '^[[1;5D' backward-word
-      bindkey -M viins '^[[1;5C' forward-word
-      bindkey -M vicmd '^[[1;5D' backward-word
-      bindkey -M vicmd '^[[1;5C' forward-word
+      # Keep Ghostty shell integration active after exec/reload-zsh.
+      if [[ -n "$GHOSTTY_RESOURCES_DIR" && -r "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration" ]]; then
+        source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+      fi
+
+      # Terminal key sequences used by Ghostty and common xterm-compatible terms.
+      for keymap in emacs viins vicmd; do
+        bindkey -M "$keymap" '^[[1;5D' backward-word
+        bindkey -M "$keymap" '^[[1;5C' forward-word
+        bindkey -M "$keymap" '^[[3~' delete-char
+      done
     '';
   };
 

@@ -1,0 +1,2 @@
+# Enable Ghostty's SSH compatibility wrapper so remote sessions get a valid TERM.
+shell-integration-features = ssh-env,ssh-terminfo
