@@ -15,7 +15,7 @@
   home = {
     username = username;
     homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
-    stateVersion = "25.05";
+    stateVersion = "26.05";
     sessionPath = [
       "$HOME/.local/bin"
       "$HOME/.cargo/bin"

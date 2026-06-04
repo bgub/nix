@@ -13,8 +13,6 @@
 
     startup.chime = false;
 
-    keyboard.enableKeyMapping = true;
-
     defaults = {
       loginwindow = {
         GuestEnabled = false;
