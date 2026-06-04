@@ -61,51 +61,24 @@
       }
     ];
 
-    shortcuts = [
-      {
-        key = "Print";
-        description = {
-          __type = "optional";
-          value = "Screenshot";
-        };
-        action = {
-          __type = "enum";
-          variant = "Spawn";
-          value = [ "flameshot gui --clipboard" ];
-        };
-      }
-      {
-        key = "Super+Return";
-        description = {
-          __type = "optional";
-          value = "Open Terminal";
-        };
-        action = {
-          __type = "enum";
-          variant = "Spawn";
-          value = [ "cosmic-term" ];
-        };
-      }
-      {
-        key = "Super+backslash";
-        action = {
-          __type = "enum";
-          variant = "Minimize";
-        };
-      }
-      {
-        key = "Alt+space";
-        description = {
-          __type = "optional";
-          value = "Voice to text";
-        };
-        action = {
-          __type = "enum";
-          variant = "Spawn";
-          value = [ "voxtype record toggle" ];
-        };
-      }
-    ];
+    # Avoid cosmic-manager's shortcut type parser, which currently uses a
+    # non-POSIX regex rejected by Nix's regex engine.
+    shortcuts = null;
+
+    configFile."com.system76.CosmicSettings.Shortcuts" = {
+      version = 1;
+      entries.custom = {
+        __type = "raw";
+        value = ''
+          {
+              (description: Some("Screenshot"), key: "Print", modifiers: []): Spawn("flameshot gui --clipboard"),
+              (description: Some("Open Terminal"), key: "Return", modifiers: [Super]): Spawn("cosmic-term"),
+              (key: "backslash", modifiers: [Super]): Minimize,
+              (description: Some("Voice to text"), key: "space", modifiers: [Alt]): Spawn("voxtype record toggle"),
+          }
+        '';
+      };
+    };
   };
 
   programs.cosmic-term = {
