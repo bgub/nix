@@ -10,7 +10,6 @@ let
     "zed/tasks.json" = "zed/tasks.json";
     "fontconfig/fonts.conf" = "fontconfig/fonts.conf";
     "aerospace/aerospace.toml" = "aerospace/aerospace.toml";
-    "karabiner/karabiner.json" = "karabiner/karabiner.json";
     "ghostty/config.ghostty" = "ghostty/config.ghostty";
     # "alacritty/alacritty.toml" = "alacritty/alacritty.toml";
   };

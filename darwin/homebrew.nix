@@ -20,7 +20,6 @@
       "ollama-app"
       "opencode-desktop"
       "cleanshot"
-      "karabiner-elements"
       "raycast"
       "betterdisplay"
 
