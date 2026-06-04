@@ -21,6 +21,11 @@
         eval "$(fnm env --use-on-cd)"
       fi
 
+      # initialize Vite+
+      if [[ -r "$HOME/.vite-plus/env" ]]; then
+        source "$HOME/.vite-plus/env"
+      fi
+
       # Keep Ghostty shell integration active after exec/reload-zsh.
       if [[ -n "$GHOSTTY_RESOURCES_DIR" && -r "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration" ]]; then
         source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
