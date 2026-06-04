@@ -1,31 +1,37 @@
 // For information on how to configure Zed, see the Zed
 // documentation: https://zed.dev/docs/configuring-zed
 {
+  "git_panel": {
+    "tree_view": true,
+  },
+  "cli_default_open_behavior": "existing_window",
+  "diff_view_style": "split",
   "agent_servers": {
     "cursor": {
-      "type": "registry"
+      "type": "registry",
     },
     "codex-acp": {
-      "type": "registry"
+      "type": "registry",
     },
     "claude-acp": {
-      "type": "registry"
-    }
+      "type": "registry",
+    },
   },
   "helix_mode": true,
-  "show_completions_on_input": false,
+  "show_completions_on_input": true,
   "gutter": {
     "min_line_number_digits": 2,
   },
   "show_edit_predictions": false,
   "edit_predictions": {
     "provider": "copilot",
-    "enabled_in_text_threads": false,
   },
   "agent": {
     "default_model": {
+      "effort": "medium",
+      "enable_thinking": true,
       "provider": "zed.dev",
-      "model": "claude-sonnet-4",
+      "model": "gpt-5.5",
     },
   },
 
@@ -47,6 +53,12 @@
     "TSX": {
       "formatter": { "language_server": { "name": "biome" } },
     },
+    "CSS": {
+      "language_servers": [
+        "tailwindcss-language-server",
+        "!vscode-css-language-server",
+      ],
+    },
     "Nix": {
       "language_servers": ["nixd", "!nil"],
     },
@@ -56,14 +68,12 @@
   },
 
   // STYLES
-  "icon_theme": "VSCode Icons for Zed (Light)",
   "ui_font_family": ".SystemUIFont",
   "ui_font_size": 16,
-  "buffer_font_family": "DejaVu Sans Mono",
   "buffer_line_height": "standard",
 
   "theme": {
-    "mode": "light",
+    "mode": "dark",
     "light": "VSCode Light+",
     "dark": "One Dark",
   },
