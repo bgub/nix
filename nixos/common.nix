@@ -18,7 +18,6 @@
 
   # ── locale & time ────────────────────────────────────────────────────
   time.timeZone = "America/Denver";
-  i18n.defaultLocale = "en_US.UTF-8";
 
   # ── desktop (COSMIC) ─────────────────────────────────────────────────
   services.displayManager.cosmic-greeter.enable = true;
@@ -97,7 +96,6 @@
       "nix-command"
       "flakes"
     ];
-    max-jobs = "auto";
   };
   nix.gc = {
     automatic = true;

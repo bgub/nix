@@ -23,10 +23,8 @@
     "sd_mod"
     "rtsx_pci_sdmmc"
   ];
-  boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.blacklistedKernelModules = [ "spd5118" ];
-  boot.extraModulePackages = [ ];
   boot.kernelParams = [ "pcie_aspm.policy=powersave" ];
   boot.kernel.sysctl."vm.swappiness" = 10;
   boot.resumeDevice = "/dev/mapper/luks-f8e136e5-0fd2-46e1-9bdf-0c5b428b02b0";

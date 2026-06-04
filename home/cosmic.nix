@@ -61,10 +61,6 @@
       }
     ];
 
-    # Avoid cosmic-manager's shortcut type parser, which currently uses a
-    # non-POSIX regex rejected by Nix's regex engine.
-    shortcuts = null;
-
     configFile."com.system76.CosmicSettings.Shortcuts" = {
       version = 1;
       entries.custom = {
