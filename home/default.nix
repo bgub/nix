@@ -1,4 +1,8 @@
-{ username, pkgs, ... }:
+{
+  username,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./packages.nix
