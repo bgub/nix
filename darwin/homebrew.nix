@@ -53,10 +53,5 @@
       "anomalyco/tap/opencode"
       "FelixKratz/formulae/borders"
     ];
-    taps = [
-      "nikitabobko/tap"
-      "anomalyco/tap"
-      "FelixKratz/formulae"
-    ];
   };
 }

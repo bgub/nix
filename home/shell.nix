@@ -8,7 +8,6 @@
     shellAliases = {
       la = "ls -la";
       ".." = "cd ..";
-      zed = "zeditor";
     };
 
     # Place small customizations in initContent (initExtra is deprecated)
