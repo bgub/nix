@@ -1,6 +1,9 @@
 // For information on how to configure Zed, see the Zed
 // documentation: https://zed.dev/docs/configuring-zed
 {
+  "project_panel": {
+    "indent_size": 10.0,
+  },
   "git_panel": {
     "tree_view": true,
   },
@@ -73,7 +76,7 @@
   "buffer_line_height": "standard",
 
   "theme": {
-    "mode": "dark",
+    "mode": "light",
     "light": "VSCode Light+",
     "dark": "One Dark",
   },
@@ -85,7 +88,6 @@
   "auto_install_extensions": {
     "html": true,
     "ruff": true,
-    "biome": true,
     "nix": true,
     "git-firefly": true,
   },

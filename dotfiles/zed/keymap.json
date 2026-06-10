@@ -27,7 +27,7 @@
   {
     "context": "ProjectPanel && not_editing",
     "bindings": {
-      "ctrl-]": "workspace::ToggleLeftDock",
+      "ctrl-]": "workspace::ToggleRightDock",
       "a": "project_panel::NewFile",
       "A": "project_panel::NewDirectory",
       "r": "project_panel::Rename",
@@ -40,13 +40,13 @@
   {
     "context": "GitPanel",
     "bindings": {
-      "ctrl-}": "workspace::ToggleLeftDock",
+      "ctrl-}": "workspace::ToggleRightDock",
     },
   },
   {
     "context": "AgentPanel",
     "bindings": {
-      "ctrl-\\": "workspace::ToggleRightDock",
+      "ctrl-\\": "workspace::ToggleLeftDock",
     },
   },
   // Navigation
