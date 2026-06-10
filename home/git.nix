@@ -7,7 +7,7 @@ _: {
     settings = {
       user = {
         name = "Ben Gubler";
-        email = "me@bengubler.com";
+        email = "git@bgub.dev";
       };
       github.user = "bgub";
       init.defaultBranch = "main";

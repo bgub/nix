@@ -7,16 +7,24 @@
       autoUpdate = true;
       upgrade = true;
       cleanup = "zap";
+      extraEnv.HOMEBREW_NO_ENV_HINTS = "1";
     };
 
     caskArgs.no_quarantine = true;
     global.brewfile = true;
 
+    taps = [
+      "stripe/stripe-cli"
+      "anomalyco/tap"
+      "FelixKratz/formulae"
+      "nikitabobko/tap"
+    ];
+
     # homebrew is best for GUI apps
     # nixpkgs is best for CLI tools
     casks = [
       # OS enhancements
-      "nikitabobko/tap/aerospace"
+      "aerospace"
       "ollama-app"
       "opencode-desktop"
       "cleanshot"
@@ -48,10 +56,12 @@
       "zen"
     ];
     brews = [
+      "awscli"
+      "stripe"
       "docker"
       "colima"
       "anomalyco/tap/opencode"
-      "FelixKratz/formulae/borders"
+      "borders"
     ];
   };
 }
