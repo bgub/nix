@@ -16,7 +16,11 @@
     "npm:pi-interactive-shell",
     "npm:pi-web-access",
     "npm:pi-btw",
-    "git:github.com/tmustier/pi-extensions"
+    "npm:@tmustier/pi-code-actions",
+    "npm:@tmustier/pi-files-widget",
+    "npm:@tmustier/pi-raw-paste",
+    "npm:@tmustier/pi-session-recap",
+    "npm:@tmustier/pi-tab-status"
   ],
   "quietStartup": true,
   "terminal": {

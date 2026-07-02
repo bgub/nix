@@ -1,1 +1,7 @@
 node_modules/
+dotfiles/.pi/agent/auth.json
+dotfiles/.pi/agent/cache/
+dotfiles/.pi/agent/git/
+dotfiles/.pi/agent/npm/
+dotfiles/.pi/agent/pi-worktrees.config.json
+dotfiles/.pi/agent/sessions/
