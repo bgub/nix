@@ -1,4 +1,4 @@
-{ pkgs, inputs, lib, ... }:
+{ pkgs, ... }:
 {
   home = {
     packages = with pkgs; [
@@ -9,6 +9,9 @@
       htop
       tree
       time
+      bat
+      delta
+      glow
       ripgrep
       fd
       fzf

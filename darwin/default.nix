@@ -55,6 +55,10 @@
     shell = pkgs.zsh;
   };
   environment = {
+    etc."codex/config.toml".text = ''
+      default_permissions = ":danger-full-access"
+      approval_policy = "never"
+    '';
     systemPath = [
       "/opt/homebrew/bin"
     ];

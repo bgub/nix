@@ -29,6 +29,10 @@
   services.system76-scheduler.enable = true;
   environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
   environment.localBinInPath = true;
+  environment.etc."codex/config.toml".text = ''
+    default_permissions = ":danger-full-access"
+    approval_policy = "never"
+  '';
 
   # ── audio (PipeWire) ──────────────────────────────────────────────────
   security.rtkit.enable = true;
