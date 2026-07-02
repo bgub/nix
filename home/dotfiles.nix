@@ -59,8 +59,11 @@ in
 
   # Files outside XDG config need home.file.
   home.file = claudeSkillLinks // {
+    ".agents/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
     ".agents/skills" = mkForcedHomeFile ".agents/skills";
-
+    ".claude/CLAUDE.md" = mkForcedHomeFile ".agents/AGENTS.md";
+    ".codex/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
+    ".pi/agent/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
     "Library/Application Support/com.mitchellh.ghostty/config.ghostty" =
       mkForcedHomeFile "ghostty/config.ghostty";
   };
