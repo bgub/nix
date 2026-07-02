@@ -72,7 +72,7 @@
 
   // STYLES
   "ui_font_family": ".SystemUIFont",
-  "ui_font_size": 16,
+  "ui_font_size": 14,
   "buffer_line_height": "standard",
 
   "theme": {
