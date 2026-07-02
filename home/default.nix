@@ -18,6 +18,7 @@
     stateVersion = "26.05";
     sessionPath = [
       "$HOME/.local/bin"
+      "$HOME/.bun/bin"
       "$HOME/.cargo/bin"
     ];
     sessionVariables = {
