@@ -1,120 +1,145 @@
 ---
 name: review-pr
-description: Review one or more GitHub pull requests from the current checkout. Use when the user asks to review a PR, review multiple PRs, inspect PR diffs, check out a PR for review, run tests for a PR, or examine PR changes. Do not create worktrees; the user may create/manage review worktrees separately.
+description: Launch an isolated background PR review in Herdr. Use when the user asks to review a GitHub PR by number or URL, especially from a main worktree/tab where the review should run elsewhere. Starts a new background Codex tab/worktree and returns only launch details unless the user explicitly asks to wait for results.
 ---
 
 # Review PR
 
-Review requested PRs from the current checkout. Do not create worktrees; assume the user will create or select any needed worktree outside this skill.
+Review a GitHub PR by launching a background Codex agent in an isolated worktree. The parent tab's job is orchestration only: create the worktree, start the agent, verify it is working, then stop.
 
-## Inputs
+## Contract
 
-Accept PR URLs, PR numbers, or branch names. If the user does not provide a PR identifier, ask for it and stop.
+- Do not review the diff in the parent tab.
+- Do not run installs, tests, or analysis in the parent tab.
+- Do not wait for the background review to finish unless the user explicitly asks to wait.
+- Return only the launch status, tab ID, pane ID, and worktree path.
+- Use `gh api` for GitHub metadata when possible.
+- Use `gpt-5.5` with `model_reasoning_effort="high"` for the background agent.
 
-Support multiple PRs in one request. Process them independently and summarize results per PR. When reviewing multiple PRs, do not switch between them if that would overwrite local changes; ask the user to provide separate worktrees or confirm the checkout sequence.
+If Herdr is unavailable, say that background PR reviews require running inside Herdr and ask whether to review in the current checkout instead.
 
-## Resolve PR Metadata
+## Launch Workflow
 
-Use the GitHub CLI API where possible.
+Preconditions:
+
+- `HERDR_ENV=1`
+- `command -v herdr`
+- the current repo has GitHub metadata available through `gh api`
+
+Fetch the PR, create a worktree under `~/gt/worktrees` when the repo is already under `~/gt`, otherwise under `~/code/worktrees`, and keep the current tab focused:
 
 ```bash
+pr_number="<number>"
+repo_root="$(git rev-parse --show-toplevel)"
 owner_repo="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
-repo_name="${owner_repo##*/}"
+pr_json="$(gh api "repos/${owner_repo}/pulls/${pr_number}")"
+pr_url="$(printf '%s' "$pr_json" | jq -r .html_url)"
+base_ref="$(printf '%s' "$pr_json" | jq -r .base.ref)"
+head_ref="$(printf '%s' "$pr_json" | jq -r .head.ref)"
+head_repo="$(printf '%s' "$pr_json" | jq -r .head.repo.full_name)"
+label="review PR #${pr_number}"
+stamp="$(date +%Y%m%d%H%M%S)"
+safe_repo="$(basename "$repo_root" | tr -cd 'A-Za-z0-9._-')"
+case "$repo_root" in
+  "$HOME/gt"/*) worktree_parent="$HOME/gt/worktrees" ;;
+  *) worktree_parent="$HOME/code/worktrees" ;;
+esac
+mkdir -p "$worktree_parent"
+worktree_path="$worktree_parent/${safe_repo}-pr-${pr_number}-${stamp}"
+review_branch="review/pr-${pr_number}-${stamp}"
+
+git fetch origin "+pull/${pr_number}/head:refs/review-pr/${pr_number}" || \
+  git fetch "https://github.com/${head_repo}.git" "+${head_ref}:refs/review-pr/${pr_number}"
+git fetch origin "+${base_ref}:refs/review-pr/${pr_number}-base"
 ```
 
-For a PR number:
+Discover the active workspace. Do not assume IDs:
 
 ```bash
-gh api "repos/${owner_repo}/pulls/<number>"
+current="$(herdr pane current --current)"
+workspace_id="$(printf '%s' "$current" | jq -r '.result.pane.workspace_id // .pane.workspace_id // empty')"
 ```
 
-For a PR URL, parse the owner, repo, and number from the URL and use:
+Create the Herdr worktree. Use either `--workspace` or `--cwd`, not both; some Herdr versions reject passing both:
 
 ```bash
-gh api "repos/<owner>/<repo>/pulls/<number>"
+created="$(herdr worktree create \
+  --workspace "$workspace_id" \
+  --path "$worktree_path" \
+  --branch "$review_branch" \
+  --base "refs/review-pr/${pr_number}" \
+  --label "$label" \
+  --no-focus \
+  --json)"
+
+tab_id="$(printf '%s' "$created" | jq -r '.result.root_pane.tab_id // .root_pane.tab_id')"
+pane_id="$(printf '%s' "$created" | jq -r '.result.root_pane.pane_id // .root_pane.pane_id')"
 ```
 
-Record:
-
-- PR number, title, URL
-- `head.sha`, `head.ref`, `head.repo.full_name`
-- `base.ref`, `base.repo.full_name`
-
-## Fetch And Check Out The PR
-
-Fetch each PR into a local review ref.
+If `herdr worktree create` is unavailable or fails for a CLI-version reason, fall back to `git worktree add --detach "$worktree_path" "refs/review-pr/${pr_number}"`, then create a normal Herdr tab and parse the returned IDs:
 
 ```bash
-git fetch origin "pull/<number>/head:refs/review-pr/<number>"
-git fetch origin "<base-ref>:refs/review-pr/<number>-base"
+git worktree add --detach "$worktree_path" "refs/review-pr/${pr_number}"
+created="$(herdr tab create --workspace "$workspace_id" --cwd "$worktree_path" --label "$label" --no-focus --json)"
+tab_id="$(printf '%s' "$created" | jq -r '.result.tab.tab_id // .tab.tab_id // .result.tab.id // .tab.id')"
+pane_id="$(printf '%s' "$created" | jq -r '.result.root_pane.pane_id // .root_pane.pane_id')"
 ```
 
-For forks where `pull/<number>/head` is unavailable, fetch the PR head repo explicitly into the same review ref:
+Start Codex in the review pane:
 
 ```bash
-git fetch "https://github.com/<head-repo-full-name>.git" "<head-ref>:refs/review-pr/<number>"
+agent_cmd="codex -m gpt-5.5 -c model_reasoning_effort=\"high\" --cd \"$worktree_path\""
+herdr pane run "$pane_id" "$agent_cmd"
+herdr tab rename "$tab_id" "$label"
 ```
 
-Before changing the current checkout, inspect local state:
+Send the delegated task. The prompt must explicitly prevent recursive delegation:
 
 ```bash
-git status -sb
+task_prompt="$(cat <<EOF
+Review ${pr_url} in this repository.
+
+You are already running in the isolated review worktree: ${worktree_path}.
+Do not delegate this review to another agent, create another Herdr tab, or create another worktree.
+The PR has been fetched into refs/review-pr/${pr_number}, and the base has been fetched into refs/review-pr/${pr_number}-base.
+Use GitHub metadata through gh api. Base: ${base_ref}. Head: ${head_repo}:${head_ref}.
+
+Run installs and focused tests/checks in this worktree where practical. If this is the gt monorepo and install is needed, use pnpm install --force, not CI=true pnpm install.
+
+Review both Standards and Spec:
+- Standards: correctness bugs, regressions, missing tests, async/resource risks, loose types, and maintainability issues.
+- Spec: compare the PR description, commits, tests, and code. If no spec is available, say so.
+
+Start with findings ordered by severity. Include exact test commands and results. Leave the final review in this tab.
+EOF
+)"
+
+herdr wait output "$pane_id" --match "›" --lines 80 --timeout 120000
+herdr pane send-text "$pane_id" "$task_prompt"
+herdr pane send-keys "$pane_id" Enter
 ```
 
-If there are local changes, ask before switching. Otherwise check out the fetched PR head:
+Verify that the agent actually started. If it remains idle, send Enter once more:
 
 ```bash
-git switch --detach "refs/review-pr/<number>"
-git status -sb
+if ! herdr wait agent-status "$pane_id" --status working --timeout 120000; then
+  herdr pane send-keys "$pane_id" Enter
+  herdr wait agent-status "$pane_id" --status working --timeout 120000
+fi
 ```
 
-## Run Tests
+## Parent Response
 
-Run tests after checking out the PR. Testing is part of the default review workflow unless the user explicitly asks for a diff-only review or the environment blocks it.
+After the background agent is working, stop. Do not read, summarize, or wait for review results.
 
-Follow repo-local instructions first. If package-manager commands fail because `pnpm`, `node`, or `npm` are missing, check the active `fnm` multishell bin path and prepend it to `PATH`.
-
-For the gt monorepo, do not use `CI=true pnpm install`; use `pnpm install --force` when an install is needed.
-
-Prefer commands implied by changed files and package scripts:
-
-```bash
-git diff --name-only "refs/review-pr/<number>-base...HEAD"
-git status -sb
-```
-
-Then inspect repo scripts and run the narrowest useful checks. Examples:
-
-```bash
-pnpm lint
-pnpm test -- <changed-test-or-package>
-pnpm typecheck
-```
-
-If full `pnpm build` or `pnpm test` is likely impractical in the gt monorepo, say so and run focused tests instead. If tests cannot be run, report the exact blocker and continue with review.
-
-## Examine The PR
-
-Use the checked-out PR and the fetched base ref to examine the diff. The `review-current` workflow applies against the PR base.
-
-```bash
-git diff "refs/review-pr/<number>-base...HEAD" --stat
-git diff "refs/review-pr/<number>-base...HEAD"
-git log "refs/review-pr/<number>-base..HEAD" --oneline
-```
-
-Review for correctness, regressions, missing tests, type safety, async/resource handling, and consistency with nearby code. Do not flag formatting-only issues.
-
-## Multiple PRs
-
-For multiple PRs, fetch all review refs first. Review one checked-out PR at a time unless the user has already created separate worktrees. Keep outputs separated by PR number.
-
-Final output:
+Use this shape:
 
 ```markdown
-### PR <number>: <title>
+Started background PR review.
 
-- Tests: <passed/failed/skipped and command summary>
-- Findings: <issues or "No blocking issues found">
-- Notes: <review caveats>
+- Tab: `w7:t1`
+- Pane: `w7:p1`
+- Worktree: `/path/to/worktree`
 ```
+
+If launch fails or the background agent does not enter `working`, report the blocker and include the pane output if useful.

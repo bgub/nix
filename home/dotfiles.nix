@@ -30,14 +30,18 @@ let
   }) files;
 
   claudeSkillFiles = [
+    "code-design"
+    "diagnose"
     "loc"
     "pr-stack"
+    "review"
     "review-current"
     "review-pr"
   ];
 
   claudeSkillDirs = [
     "effect-ts"
+    "herdr"
   ];
 
   claudeSkillLinks =
