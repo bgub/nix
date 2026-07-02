@@ -1,0 +1,6 @@
+{
+  "powerbar": {
+    "left": "git-branch,tokens,context-usage",
+    "right": "model,service-tier,sub-hourly,sub-weekly"
+  }
+}

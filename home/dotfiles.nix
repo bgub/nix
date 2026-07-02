@@ -57,20 +57,53 @@ let
         value = mkForcedHomeFile ".agents/skills/${name}";
       }) claudeSkillDirs
     );
+
+  piFiles = [
+    "package-lock.json"
+    "package.json"
+    "tsconfig.json"
+    "agent/cloak.json"
+    "agent/service-tier.json"
+    "agent/settings-extensions.json"
+    "agent/settings.json"
+  ];
+
+  piExtensionFiles = [
+    "git-interceptor.ts"
+    "pi-cloak.ts"
+    "save-md.ts"
+  ];
+
+  piLinks =
+    lib.listToAttrs (
+      map (name: {
+        name = ".pi/${name}";
+        value = mkForcedHomeFile ".pi/${name}";
+      }) piFiles
+    )
+    // lib.listToAttrs (
+      map (name: {
+        name = ".pi/agent/extensions/${name}";
+        value = mkForcedHomeFile ".pi/agent/extensions/${name}";
+      }) piExtensionFiles
+    );
 in
 {
   xdg.configFile = toXdg;
 
   # Files outside XDG config need home.file.
-  home.file = claudeSkillLinks // {
-    ".agents/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
-    ".agents/skills" = mkForcedHomeFile ".agents/skills";
-    ".claude/CLAUDE.md" = mkForcedHomeFile ".agents/AGENTS.md";
-    ".codex/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
-    ".pi/agent/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
-    "Library/Application Support/com.mitchellh.ghostty/config.ghostty" =
-      mkForcedHomeFile "ghostty/config.ghostty";
-  };
+  home.file =
+    claudeSkillLinks
+    // piLinks
+    // {
+      ".agents/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
+      ".agents/skills" = mkForcedHomeFile ".agents/skills";
+      ".claude/CLAUDE.md" = mkForcedHomeFile ".agents/AGENTS.md";
+      ".codex/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
+      ".pi/agent/AGENTS.md" = mkForcedHomeFile ".agents/AGENTS.md";
+      "Library/Application Support/com.mitchellh.ghostty/config.ghostty" =
+        mkForcedHomeFile "ghostty/config.ghostty";
+    };
 
   home.activation.codexDefaultPermissions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     codexConfig="$HOME/.codex/config.toml"
