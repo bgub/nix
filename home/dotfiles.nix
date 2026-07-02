@@ -28,17 +28,38 @@ let
     source = mkSource repoRel;
     force = true;
   }) files;
+
+  claudeSkillFiles = [
+    "loc"
+    "pr-stack"
+    "review-current"
+    "review-pr"
+  ];
+
+  claudeSkillDirs = [
+    "effect-ts"
+  ];
+
+  claudeSkillLinks =
+    lib.listToAttrs (
+      map (name: {
+        name = ".claude/skills/${name}/SKILL.md";
+        value = mkForcedHomeFile ".agents/skills/${name}/SKILL.md";
+      }) claudeSkillFiles
+    )
+    // lib.listToAttrs (
+      map (name: {
+        name = ".claude/skills/${name}";
+        value = mkForcedHomeFile ".agents/skills/${name}";
+      }) claudeSkillDirs
+    );
 in
 {
   xdg.configFile = toXdg;
 
   # Files outside XDG config need home.file.
-  home.file = {
+  home.file = claudeSkillLinks // {
     ".agents/skills" = mkForcedHomeFile ".agents/skills";
-    ".claude/skills" = mkForcedHomeFile ".agents/skills";
-
-    # Claude Code agents
-    ".claude/agents/eval-issue.md" = mkHomeFile "claude/agents/eval-issue.md";
 
     "Library/Application Support/com.mitchellh.ghostty/config.ghostty" =
       mkForcedHomeFile "ghostty/config.ghostty";
