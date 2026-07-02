@@ -1,4 +1,4 @@
 interface:
   display_name: "Review PR"
-  short_description: "Review pull requests in isolated worktrees"
+  short_description: "Check out and test pull requests"
   default_prompt: "Review PR <url-or-number>"

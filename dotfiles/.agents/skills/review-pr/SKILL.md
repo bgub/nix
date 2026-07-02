@@ -1,33 +1,17 @@
 ---
 name: review-pr
-description: Review one or more GitHub pull requests in isolated git worktrees. Use when the user asks to review a PR, review multiple PRs at once, run tests for PR review, examine a PR without disturbing the current checkout, or create per-PR review worktrees under ~/gt/worktrees or ~/code/worktrees.
+description: Review one or more GitHub pull requests from the current checkout. Use when the user asks to review a PR, review multiple PRs, inspect PR diffs, check out a PR for review, run tests for a PR, or examine PR changes. Do not create worktrees; the user may create/manage review worktrees separately.
 ---
 
 # Review PR
 
-Review each requested PR in its own worktree so multiple reviews can run independently.
+Review requested PRs from the current checkout. Do not create worktrees; assume the user will create or select any needed worktree outside this skill.
 
 ## Inputs
 
 Accept PR URLs, PR numbers, or branch names. If the user does not provide a PR identifier, ask for it and stop.
 
-Support multiple PRs in one request. Process them independently and summarize results per PR.
-
-## Worktree Root
-
-Choose the worktree root from the current repository location:
-
-- If the current repository is under `$HOME/gt`, use `$HOME/gt/worktrees`.
-- Otherwise use `$HOME/code/worktrees`.
-
-```bash
-repo_root="$(git rev-parse --show-toplevel)"
-case "$repo_root" in
-  "$HOME/gt"/*) worktree_root="$HOME/gt/worktrees" ;;
-  *) worktree_root="$HOME/code/worktrees" ;;
-esac
-mkdir -p "$worktree_root"
-```
+Support multiple PRs in one request. Process them independently and summarize results per PR. When reviewing multiple PRs, do not switch between them if that would overwrite local changes; ask the user to provide separate worktrees or confirm the checkout sequence.
 
 ## Resolve PR Metadata
 
@@ -56,63 +40,47 @@ Record:
 - `head.sha`, `head.ref`, `head.repo.full_name`
 - `base.ref`, `base.repo.full_name`
 
-## Create One Worktree Per PR
+## Fetch And Check Out The PR
 
-Use a stable, readable directory name:
-
-```bash
-worktree_path="${worktree_root}/${repo_name}-pr-<number>"
-```
-
-If the path already exists:
-
-1. Check whether it is a git worktree with `git -C "$worktree_path" rev-parse --show-toplevel`.
-2. Check whether it is dirty with `git -C "$worktree_path" status --short`.
-3. If it is dirty, stop for that PR and ask before reusing or replacing it.
-4. If it is clean, reuse it after fetching and checking out the current PR head.
+Fetch each PR into a local review ref.
 
 ```bash
-git -C "$repo_root" fetch origin "pull/<number>/head"
-git -C "$worktree_path" checkout --detach FETCH_HEAD
+git fetch origin "pull/<number>/head:refs/review-pr/<number>"
+git fetch origin "<base-ref>:refs/review-pr/<number>-base"
 ```
 
-For a fresh worktree, fetch the PR and create a detached worktree at the PR head:
+For forks where `pull/<number>/head` is unavailable, fetch the PR head repo explicitly into the same review ref:
 
 ```bash
-git fetch origin "pull/<number>/head"
-git worktree add --detach "$worktree_path" FETCH_HEAD
+git fetch "https://github.com/<head-repo-full-name>.git" "<head-ref>:refs/review-pr/<number>"
 ```
 
-For forks where `pull/<number>/head` is unavailable, fetch the PR head repo explicitly:
+Before changing the current checkout, inspect local state:
 
 ```bash
-git -C "$repo_root" fetch "https://github.com/<head-repo-full-name>.git" "<head-ref>"
-git worktree add --detach "$worktree_path" FETCH_HEAD
+git status -sb
 ```
 
-Fetch the base branch for comparison:
+If there are local changes, ask before switching. Otherwise check out the fetched PR head:
 
 ```bash
-git -C "$worktree_path" fetch origin "<base-ref>"
+git switch --detach "refs/review-pr/<number>"
+git status -sb
 ```
 
-## Install Or Reuse Dependencies
+## Run Tests
 
-Do not assume dependencies are installed in the new worktree.
+Run tests after checking out the PR. Testing is part of the default review workflow unless the user explicitly asks for a diff-only review or the environment blocks it.
 
 Follow repo-local instructions first. If package-manager commands fail because `pnpm`, `node`, or `npm` are missing, check the active `fnm` multishell bin path and prepend it to `PATH`.
 
 For the gt monorepo, do not use `CI=true pnpm install`; use `pnpm install --force` when an install is needed.
 
-## Run Tests
-
-Run focused validation from inside the worktree.
-
 Prefer commands implied by changed files and package scripts:
 
 ```bash
-git -C "$worktree_path" diff --name-only "origin/<base-ref>...HEAD"
-git -C "$worktree_path" status -sb
+git diff --name-only "refs/review-pr/<number>-base...HEAD"
+git status -sb
 ```
 
 Then inspect repo scripts and run the narrowest useful checks. Examples:
@@ -127,30 +95,26 @@ If full `pnpm build` or `pnpm test` is likely impractical in the gt monorepo, sa
 
 ## Examine The PR
 
-Inside each worktree, use the `review-current` workflow against the PR base:
+Use the checked-out PR and the fetched base ref to examine the diff. The `review-current` workflow applies against the PR base.
 
 ```bash
-cd "$worktree_path"
-git diff "origin/<base-ref>...HEAD" --stat
-git diff "origin/<base-ref>...HEAD"
-git log "origin/<base-ref>..HEAD" --oneline
+git diff "refs/review-pr/<number>-base...HEAD" --stat
+git diff "refs/review-pr/<number>-base...HEAD"
+git log "refs/review-pr/<number>-base..HEAD" --oneline
 ```
 
 Review for correctness, regressions, missing tests, type safety, async/resource handling, and consistency with nearby code. Do not flag formatting-only issues.
 
 ## Multiple PRs
 
-For multiple PRs, create or reuse all worktrees first, then run review/test work independently per worktree. Parallelize where tools allow it, but keep outputs separated by PR number.
+For multiple PRs, fetch all review refs first. Review one checked-out PR at a time unless the user has already created separate worktrees. Keep outputs separated by PR number.
 
 Final output:
 
 ```markdown
 ### PR <number>: <title>
 
-- Worktree: <path>
 - Tests: <passed/failed/skipped and command summary>
 - Findings: <issues or "No blocking issues found">
 - Notes: <review caveats>
 ```
-
-Do not remove worktrees after review unless the user asks.
