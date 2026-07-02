@@ -67,4 +67,19 @@ in
     "Library/Application Support/com.mitchellh.ghostty/config.ghostty" =
       mkForcedHomeFile "ghostty/config.ghostty";
   };
+
+  home.activation.codexDefaultPermissions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    codexConfig="$HOME/.codex/config.toml"
+
+    $DRY_RUN_CMD mkdir -p "$HOME/.codex"
+    if [ ! -e "$codexConfig" ]; then
+      $DRY_RUN_CMD install -m 600 /dev/null "$codexConfig"
+    fi
+
+    if grep -Eq '^[[:space:]]*default_permissions[[:space:]]*=' "$codexConfig"; then
+      $DRY_RUN_CMD perl -0pi -e 's/^[ \t]*default_permissions[ \t]*=.*$/default_permissions = ":danger-full-access"/m' "$codexConfig"
+    else
+      $DRY_RUN_CMD perl -0pi -e 's/\A/default_permissions = ":danger-full-access"\n/' "$codexConfig"
+    fi
+  '';
 }
