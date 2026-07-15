@@ -14,9 +14,16 @@ Review a GitHub PR by launching a background Codex agent in an isolated worktree
 - Do not wait for the background review to finish unless the user explicitly asks to wait.
 - Return only the launch status, tab ID, pane ID, and worktree path.
 - Use `gh api` for GitHub metadata when possible.
-- Use `gpt-5.5` with `model_reasoning_effort="high"` for the background agent.
+- Use `gpt-5.6-sol` with `model_reasoning_effort="high"` for the background agent.
 
 If Herdr is unavailable, say that background PR reviews require running inside Herdr and ask whether to review in the current checkout instead.
+
+## Launch Discipline
+
+- Prefer one non-interactive shell block that creates the worktree, starts Codex, sends the prompt, presses Enter, and waits for `agent-status=working`.
+- Do not split prompt submission and Enter/status verification across multiple assistant turns unless a command fails or the user interrupts.
+- Keep command output concise: return IDs and paths, not full fetch/build logs.
+- If interrupted after `herdr pane send-text`, recover by immediately running `herdr pane send-keys "$pane_id" Enter` and then waiting for `agent-status=working`.
 
 ## Launch Workflow
 
@@ -88,7 +95,7 @@ pane_id="$(printf '%s' "$created" | jq -r '.result.root_pane.pane_id // .root_pa
 Start Codex in the review pane:
 
 ```bash
-agent_cmd="codex -m gpt-5.5 -c model_reasoning_effort=\"high\" --cd \"$worktree_path\""
+agent_cmd="codex -m gpt-5.6-sol -c model_reasoning_effort=\"high\" --cd \"$worktree_path\""
 herdr pane run "$pane_id" "$agent_cmd"
 herdr tab rename "$tab_id" "$label"
 ```
@@ -116,10 +123,14 @@ EOF
 
 herdr wait output "$pane_id" --match "›" --lines 80 --timeout 120000
 herdr pane send-text "$pane_id" "$task_prompt"
+
+# CRITICAL: send-text only fills the Codex prompt. It does not submit it.
+# Always press Enter immediately after sending the prompt.
 herdr pane send-keys "$pane_id" Enter
 ```
 
-Verify that the agent actually started. If it remains idle, send Enter once more:
+Verify that the agent actually started. If it remains idle, assume the prompt
+was not submitted and send Enter once more:
 
 ```bash
 if ! herdr wait agent-status "$pane_id" --status working --timeout 120000; then

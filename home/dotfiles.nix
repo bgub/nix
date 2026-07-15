@@ -36,8 +36,10 @@ let
   claudeSkillFiles = [
     "code-design"
     "diagnose"
+    "handoff"
     "loc"
     "pr-stack"
+    "refactor-effect"
     "review"
     "review-current"
     "review-pr"

@@ -5,6 +5,7 @@
     "indent_size": 10.0,
   },
   "git_panel": {
+    "group_by": "none",
     "tree_view": true,
   },
   "cli_default_open_behavior": "existing_window",

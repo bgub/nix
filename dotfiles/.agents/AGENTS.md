@@ -1,5 +1,6 @@
 ## Local Notes
 
+- Use the `executor` MCP skill to access Gmail and Google Calendar/Drive/Docs/Sheets
 - Agent config files, skills, and AGENTS.md/CLAUDE.md files for Codex, Pi, Claude, and related agents are sourced from `~/.config/nix/dotfiles`. Edit the source files under that repo, not the symlinked/generated copies in `~/.codex`, `~/.pi`, `~/.claude`, or similar agent config directories.
 - Do not push commits without asking first.
 - Always use the GitHub CLI API (`gh api`) when possible for GitHub operations.
