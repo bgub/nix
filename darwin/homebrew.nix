@@ -10,21 +10,23 @@
       extraEnv.HOMEBREW_NO_ENV_HINTS = "1";
     };
 
-    caskArgs.no_quarantine = true;
     global.brewfile = true;
 
-    taps = [
-      "stripe/stripe-cli"
-      "anomalyco/tap"
-      "FelixKratz/formulae"
-      "nikitabobko/tap"
-    ];
+    # Declare trust in the Brewfile so `brew bundle --cleanup` preserves it.
+    # Keep this item-specific instead of trusting every package in each tap.
+    extraConfig = ''
+      tap "stripe/stripe-cli", trusted: { formula: "stripe" }
+      tap "anomalyco/tap", trusted: { formula: "opencode" }
+      tap "FelixKratz/formulae", trusted: { formula: "borders" }
+      tap "nikitabobko/tap", trusted: { cask: "aerospace" }
+    '';
 
     # homebrew is best for GUI apps
     # nixpkgs is best for CLI tools
     casks = [
       # OS enhancements
       "aerospace"
+      "karabiner-elements"
       "ollama-app"
       "opencode-desktop"
       "cleanshot"

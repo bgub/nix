@@ -41,6 +41,8 @@
       # misc
       nixd
       biome
+      typescript
+      typescript-language-server
       nixfmt
       yt-dlp
       ffmpeg

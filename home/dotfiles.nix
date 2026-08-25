@@ -96,7 +96,11 @@ let
 
 in
 {
-  xdg.configFile = toXdg;
+  xdg.configFile = toXdg // {
+    # Karabiner watches its config directory, so link the directory rather than
+    # karabiner.json itself to preserve automatic config reloads.
+    "karabiner" = mkForcedHomeFile "karabiner";
+  };
 
   # Files outside XDG config need home.file.
   home.file =

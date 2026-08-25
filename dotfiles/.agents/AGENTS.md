@@ -2,7 +2,7 @@
 
 - Use the `executor` MCP skill to access Gmail and Google Calendar/Drive/Docs/Sheets
 - Agent config files, skills, and AGENTS.md/CLAUDE.md files for Codex, Pi, Claude, and related agents are sourced from `~/.config/nix/dotfiles`. Edit the source files under that repo, not the symlinked/generated copies in `~/.codex`, `~/.pi`, `~/.claude`, or similar agent config directories.
-- Do not push commits without asking first.
+- Do not push unless the user explicitly requests it or the requested outcome clearly requires updating the remote pull request.
 - Always use the GitHub CLI API (`gh api`) when possible for GitHub operations.
 - If `pnpm`, `node`, or `npm` are missing, check the active `fnm` multishell bin path. In this setup it may look like `/Users/bgub/.local/state/fnm_multishells/<id>/bin`; prepend it to `PATH` for commands.
 - Use conventional commit messages for commits.

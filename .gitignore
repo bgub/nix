@@ -1,4 +1,5 @@
 node_modules/
+dotfiles/karabiner/automatic_backups/
 dotfiles/.pi/agent/auth.json
 dotfiles/.pi/agent/cache/
 dotfiles/.pi/agent/git/

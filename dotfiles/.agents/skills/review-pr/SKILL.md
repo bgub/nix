@@ -1,13 +1,35 @@
 ---
 name: review-pr
-description: Launch an isolated background PR review in Herdr. Use when the user asks to review a GitHub PR by number or URL, especially from a main worktree/tab where the review should run elsewhere. Starts a new background Codex tab/worktree and returns only launch details unless the user explicitly asks to wait for results.
+description: Review a GitHub PR by number or URL. By default, launch an isolated background review in a separate Herdr tab and worktree. If the user asks for a local review or says locally, in this checkout, in this tab, or without a separate workspace/tab, review directly in the current checkout and never create a Herdr workspace, tab, worktree, or background agent.
 ---
 
 # Review PR
 
-Review a GitHub PR by launching a background Codex agent in an isolated worktree. The parent tab's job is orchestration only: create the worktree, start the agent, verify it is working, then stop.
+Choose the review mode from the user's wording before taking any action.
 
-## Contract
+## Mode Selection
+
+Use local mode when the user asks for a `local review`, says `locally`, `in this checkout`, `in this workspace`, `in this tab`, `here`, or explicitly asks not to create a separate workspace, worktree, tab, or background agent. Local mode takes precedence even when Herdr is available.
+
+Use background mode for other PR review requests.
+
+## Local Mode
+
+Review the PR directly in the current agent and checkout.
+
+- Do not call Herdr, create a worktree or tab, or delegate to another agent.
+- Use `gh api` for PR metadata and comments when possible.
+- Check the current branch and worktree status before reviewing. Preserve unrelated local changes.
+- Fetch the PR head and base into temporary refs when needed. Do not switch branches or alter the current checkout merely to align it with the PR.
+- If the current checkout contains the PR head, run focused tests and checks there when practical. Otherwise, inspect the fetched refs and clearly state that tests were not run against the PR checkout.
+- Review both standards and spec: correctness, regressions, missing tests, async/resource risks, loose types, maintainability, and agreement with the PR description and commits.
+- Return the full review in the current response, with findings ordered by severity and exact test commands/results.
+
+## Background Mode
+
+Launch a background Codex agent in an isolated worktree. The parent tab's job is orchestration only: create the worktree, start the agent, verify it is working, then stop.
+
+## Background Contract
 
 - Do not review the diff in the parent tab.
 - Do not run installs, tests, or analysis in the parent tab.
