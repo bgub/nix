@@ -3,14 +3,11 @@ start-at-login = true
 # auto-tile into columns
 after-login-command = []
 after-startup-command = [
-    'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0'
+  'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0',
 ]
 
 on-window-detected = [
-    {
-        if = 'test %{app-name} ~= gneiss',
-        run = 'move-node-to-workspace 2',
-    }
+  { if = 'test %{app-name} ~= gneiss', run = 'move-node-to-workspace 2' },
 ]
 
 enable-normalization-flatten-containers = true
@@ -38,15 +35,15 @@ ctrl-right = 'focus right'
 ctrl-shift-left = 'move left'
 ctrl-shift-right = 'move right'
 
-# Vim-style window and workspace navigation
-cmd-h = 'focus --boundaries all-monitors-outer-frame left'
-cmd-j = 'workspace next'
-cmd-k = 'workspace prev'
-cmd-l = 'focus --boundaries all-monitors-outer-frame right'
-cmd-shift-h = 'move --boundaries all-monitors-outer-frame left'
-cmd-shift-j = ['move-node-to-workspace next', 'workspace next']
-cmd-shift-k = ['move-node-to-workspace prev', 'workspace prev']
-cmd-shift-l = 'move --boundaries all-monitors-outer-frame right'
+# Caps layer signals: H/J/K/L, with Shift for movement
+f17 = 'focus --boundaries all-monitors-outer-frame left'
+f18 = 'workspace next'
+f19 = 'workspace prev'
+f20 = 'focus --boundaries all-monitors-outer-frame right'
+shift-f17 = 'move --boundaries all-monitors-outer-frame left'
+shift-f18 = ['move-node-to-workspace next', 'workspace next']
+shift-f19 = ['move-node-to-workspace prev', 'workspace prev']
+shift-f20 = 'move --boundaries all-monitors-outer-frame right'
 
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'

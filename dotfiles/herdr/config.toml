@@ -1,0 +1,13 @@
+onboarding = false
+
+[keys]
+next_workspace = "ctrl+j"
+previous_workspace = "ctrl+k"
+
+[ui]
+agent_panel_scope = "all"
+agent_panel_sort = "priority"
+show_agent_labels_on_pane_borders = true
+
+[ui.toast]
+delivery = "off"

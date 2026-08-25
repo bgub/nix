@@ -25,6 +25,7 @@ let
     "fontconfig/fonts.conf" = "fontconfig/fonts.conf";
     "aerospace/aerospace.toml" = "aerospace/aerospace.toml";
     "ghostty/config.ghostty" = "ghostty/config.ghostty";
+    "herdr/config.toml" = "herdr/config.toml";
     # "alacritty/alacritty.toml" = "alacritty/alacritty.toml";
   };
 
