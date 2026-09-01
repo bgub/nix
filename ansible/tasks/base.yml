@@ -1,0 +1,178 @@
+---
+- name: Configure base tools and dotfiles
+  vars:
+    repo_root: "{{ playbook_dir | dirname }}"
+    base_packages:
+      - ca-certificates
+      - curl
+      - fontconfig
+      - git
+      - git-lfs
+      - tar
+      - unzip
+      - wget
+      - xdg-user-dirs
+      - xz-utils
+      - zsh
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
+    base_directories:
+      - .claude
+      - .codex
+      - .local/bin
+      - .pi/agent/extensions
+      - Documents
+      - Downloads
+      - Pictures
+      - Projects
+      - Videos
+    managed_links:
+      - [.agents, .agents]
+      - [.agents/AGENTS.md, .claude/CLAUDE.md]
+      - [.agents/skills, .claude/skills]
+      - [.agents/AGENTS.md, .codex/AGENTS.md]
+      - [.agents/AGENTS.md, .pi/agent/AGENTS.md]
+      - [.pi/package-lock.json, .pi/package-lock.json]
+      - [.pi/package.json, .pi/package.json]
+      - [.pi/tsconfig.json, .pi/tsconfig.json]
+      - [.pi/agent/cloak.json, .pi/agent/cloak.json]
+      - [.pi/agent/service-tier.json, .pi/agent/service-tier.json]
+      - [.pi/agent/settings-extensions.json, .pi/agent/settings-extensions.json]
+      - [.pi/agent/settings.json, .pi/agent/settings.json]
+      - [.pi/agent/extensions/git-interceptor.ts, .pi/agent/extensions/git-interceptor.ts]
+      - [.pi/agent/extensions/pi-cloak.ts, .pi/agent/extensions/pi-cloak.ts]
+      - [.pi/agent/extensions/save-md.ts, .pi/agent/extensions/save-md.ts]
+    nerd_fonts_version: "3.5.1"
+    nerd_fonts:
+      - [DroidSansMono, sha256:8e383ba1fde4e413996dcf47fbfaecbf544a7de940147a03af61fccd9ec9b8c4]
+      - [FiraCode, sha256:68e3bd6164864b8b514605bc34e3a87ac401c8c48682fcce6478c70263340207]
+      - [FiraMono, sha256:e3112075b65d9a900ef6ca562c30f1b5eb1d1a928e97de7469962ac8c45e93d6]
+    font_cache: >-
+      {{ ansible_facts.user_dir }}/.cache/workstation/nerd-fonts/{{ nerd_fonts_version }}
+    font_dir: "{{ ansible_facts.user_dir }}/.local/share/fonts/NerdFonts"
+    monarch_mcp_dir: >-
+      {{ ansible_facts.user_dir }}/.local/share/mcp/monarch-mcp-server
+    monarch_mcp_revision: ca6c1598c99a0ff1f7b7effbb2c9f518224eab44
+
+  block:
+    - name: Install base packages
+      ansible.builtin.apt:
+        name: "{{ base_packages }}"
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+      become: true
+      tags: sudo
+
+    - name: Use the system Zsh as the login shell
+      ansible.builtin.user:
+        name: "{{ ansible_facts.user_id }}"
+        shell: /usr/bin/zsh
+      become: true
+      tags: sudo
+
+    - name: Ensure base directories exist
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop: "{{ base_directories }}"
+
+    - name: Link agent configuration
+      ansible.builtin.file:
+        src: "{{ repo_root }}/dotfiles/{{ item.0 }}"
+        dest: "{{ ansible_facts.user_dir }}/{{ item.1 }}"
+        state: link
+        force: true
+      loop: "{{ managed_links }}"
+      loop_control:
+        label: "{{ item.1 }}"
+
+    - name: Ensure the MCP server directory exists
+      ansible.builtin.file:
+        path: "{{ monarch_mcp_dir | dirname }}"
+        state: directory
+        mode: "0755"
+      tags:
+        - codex
+
+    - name: Install the Monarch Money MCP server
+      ansible.builtin.git:
+        repo: https://github.com/robcerda/monarch-mcp-server.git
+        dest: "{{ monarch_mcp_dir }}"
+        version: "{{ monarch_mcp_revision }}"
+      tags:
+        - codex
+
+    - name: Install the Monarch Money MCP dependencies
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_facts.user_dir }}/.local/bin/uv"
+          - sync
+          - --frozen
+          - --project
+          - "{{ monarch_mcp_dir }}"
+      changed_when: false
+      tags:
+        - codex
+
+    - name: Configure Codex system MCP servers
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/codex-config.toml"
+        dest: /etc/codex/config.toml
+        owner: root
+        group: root
+        mode: "0644"
+      become: true
+      tags:
+        - codex
+
+    - name: Create the quiet-login marker
+      ansible.builtin.copy:
+        content: ""
+        dest: "{{ ansible_facts.user_dir }}/.hushlogin"
+        mode: "0644"
+
+    - name: Remove the Home Manager environment fragment
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/.config/environment.d/10-home-manager.conf"
+        state: absent
+
+    - name: Ensure font directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ font_cache }}"
+        - "{{ font_dir }}"
+
+    - name: Download Nerd Fonts
+      ansible.builtin.get_url:
+        url: >-
+          https://github.com/ryanoasis/nerd-fonts/releases/download/v{{ nerd_fonts_version }}/{{ item.0 }}.tar.xz
+        dest: "{{ font_cache }}/{{ item.0 }}.tar.xz"
+        checksum: "{{ item.1 }}"
+        mode: "0644"
+      loop: "{{ nerd_fonts }}"
+      loop_control:
+        label: "{{ item.0 }}"
+
+    - name: Ensure Nerd Font family directories exist
+      ansible.builtin.file:
+        path: "{{ font_dir }}/{{ item.0 }}"
+        state: directory
+        mode: "0755"
+      loop: "{{ nerd_fonts }}"
+      loop_control:
+        label: "{{ item.0 }}"
+
+    - name: Install Nerd Fonts
+      ansible.builtin.unarchive:
+        src: "{{ font_cache }}/{{ item.0 }}.tar.xz"
+        dest: "{{ font_dir }}/{{ item.0 }}"
+        remote_src: true
+      loop: "{{ nerd_fonts }}"
+      loop_control:
+        label: "{{ item.0 }}"
+      notify: Refresh font cache

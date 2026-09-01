@@ -1,0 +1,78 @@
+---
+- name: Configure workstation
+  hosts: localhost
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  pre_tasks:
+    - name: Install bootstrap package prerequisites
+      ansible.builtin.apt:
+        name:
+          - curl
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+      become: true
+      tags: always
+
+    - name: Ensure bootstrap directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ ansible_facts.user_dir }}/.local/bin"
+        - "{{ ansible_facts.user_dir }}/.cache/workstation/installers"
+      tags: always
+
+    - name: Install Dotter
+      ansible.builtin.get_url:
+        url: https://github.com/SuperCuber/dotter/releases/download/v0.13.5/dotter-linux-x64-musl
+        dest: "{{ ansible_facts.user_dir }}/.local/bin/dotter"
+        checksum: sha256:a79e1ef325d4ecb3e3fffe3dd961f6f854cc45e2eb82755d3be23cdfe0603211
+        mode: "0755"
+      tags: always
+
+    - name: Download the uv installer
+      ansible.builtin.get_url:
+        url: https://astral.sh/uv/0.11.17/install.sh
+        dest: "{{ ansible_facts.user_dir }}/.cache/workstation/installers/uv.sh"
+        mode: "0755"
+      tags: always
+
+    - name: Install uv
+      ansible.builtin.command:
+        argv:
+          - /bin/bash
+          - "{{ ansible_facts.user_dir }}/.cache/workstation/installers/uv.sh"
+        creates: "{{ ansible_facts.user_dir }}/.local/bin/uv"
+      environment:
+        UV_INSTALL_DIR: "{{ ansible_facts.user_dir }}/.local/bin"
+        UV_NO_MODIFY_PATH: "1"
+      tags: always
+
+  tasks:
+    - name: Configure the base system and dotfiles
+      ansible.builtin.import_tasks: tasks/base.yml
+      tags:
+        - base
+
+    - name: Install development tools
+      ansible.builtin.import_tasks: tasks/devtools.yml
+      tags:
+        - devtools
+
+    - name: Install graphical applications
+      ansible.builtin.import_tasks: tasks/gui.yml
+      tags:
+        - gui
+
+  handlers:
+    - name: Refresh font cache
+      ansible.builtin.command:
+        argv:
+          - fc-cache
+          - --force
+          - "{{ ansible_facts.user_dir }}/.local/share/fonts/NerdFonts"
+      changed_when: true

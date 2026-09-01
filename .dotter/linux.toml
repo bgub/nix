@@ -1,0 +1,10 @@
+packages = [
+  "cosmic",
+  "flameshot",
+  "git",
+  "ghostty",
+  "herdr",
+  "nvim",
+  "shell",
+  "zed",
+]

@@ -1,4 +1,6 @@
 node_modules/
+.dotter/cache.toml
+.dotter/cache/
 dotfiles/karabiner/automatic_backups/
 dotfiles/.pi/agent/auth.json
 dotfiles/.pi/agent/cache/

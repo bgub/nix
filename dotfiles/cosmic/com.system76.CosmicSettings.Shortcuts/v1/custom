@@ -1,0 +1,6 @@
+{
+    (description: Some("Screenshot"), key: "Print", modifiers: []): Spawn("flameshot gui --clipboard"),
+    (description: Some("Open Terminal"), key: "Return", modifiers: [Super]): Spawn("cosmic-term"),
+    (key: "backslash", modifiers: [Super]): Minimize,
+    (description: Some("Voice to text"), key: "space", modifiers: [Alt]): Spawn("voxtype record toggle"),
+}

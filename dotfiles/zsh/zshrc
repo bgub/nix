@@ -1,0 +1,63 @@
+autoload -Uz compinit
+compinit
+
+HISTFILE="$HOME/.config/zsh/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+mkdir -p "${HISTFILE:h}"
+
+setopt HIST_FCNTL_LOCK HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
+
+if [[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  ZSH_AUTOSUGGEST_STRATEGY=(history)
+fi
+
+if [[ -r /usr/share/doc/fzf/examples/completion.zsh ]]; then
+  source /usr/share/doc/fzf/examples/completion.zsh
+fi
+if [[ -r /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+fi
+
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+if [[ $TERM != dumb ]] && command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+
+if [[ -r "$HOME/.vite-plus/env" ]]; then
+  source "$HOME/.vite-plus/env"
+fi
+
+if [[ -n ${GHOSTTY_RESOURCES_DIR:-} && -r "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration" ]]; then
+  source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+fi
+
+reload-zsh() { exec "$SHELL" -l }
+
+alias ..='cd ..'
+alias la='ls -la'
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --icons auto --git'
+  alias ll='eza --icons auto --git -l'
+  alias lla='eza --icons auto --git -la'
+  alias lt='eza --icons auto --git --tree'
+fi
+
+for keymap in emacs viins vicmd; do
+  bindkey -M "$keymap" '^[[1;5D' backward-word
+  bindkey -M "$keymap" '^[[1;5C' forward-word
+  bindkey -M "$keymap" '^[[3~' delete-char
+done
+
+if [[ -r /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi

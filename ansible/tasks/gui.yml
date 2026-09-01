@@ -1,0 +1,88 @@
+---
+- name: Install graphical applications
+  vars:
+    flatpak_remotes:
+      - [flathub, https://flathub.org/repo/flathub.flatpakrepo]
+      - [cosmic, https://apt.pop-os.org/cosmic/cosmic.flatpakrepo]
+    flatpak_apps:
+      - [flathub, dev.edfloreshz.CosmicTweaks]
+      - [cosmic, dev.DBrox.CosmicSystemMonitor]
+      - [cosmic, com.github.bgub.CosmicExtAppletPomodoro]
+      - [cosmic, com.github.bgub.CosmicExtAppletVigil]
+      - [cosmic, io.github.cosmic_utils.cosmic-ext-applet-clipboard-manager]
+      - [flathub, app.zen_browser.zen]
+      - [flathub, md.obsidian.Obsidian]
+      - [flathub, com.obsproject.Studio]
+      - [flathub, com.obsproject.Studio.Plugin.AdvancedMasks]
+      - [flathub, com.obsproject.Studio.Plugin.DroidCam]
+
+  block:
+    - name: Install graphical package prerequisites
+      ansible.builtin.apt:
+        name:
+          - flatpak
+          - flameshot
+          - software-properties-common
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+      become: true
+      tags: sudo
+
+    - name: Configure the Brave package repository
+      ansible.builtin.get_url:
+        url: "{{ item.0 }}"
+        dest: "{{ item.1 }}"
+        mode: "0644"
+      loop:
+        - [https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg, /usr/share/keyrings/brave-browser-archive-keyring.gpg]
+        - [https://brave-browser-apt-release.s3.brave.com/brave-browser.sources, /etc/apt/sources.list.d/brave-browser-release.sources]
+      become: true
+      tags: sudo
+
+    - name: Configure the Ghostty PPA
+      ansible.builtin.command:
+        argv: [add-apt-repository, --yes, ppa:mkasberg/ghostty-ubuntu]
+        creates: >-
+          /etc/apt/sources.list.d/mkasberg-ubuntu-ghostty-ubuntu-{{ ansible_facts.distribution_release }}.sources
+      become: true
+      tags: sudo
+
+    - name: Install native graphical applications
+      ansible.builtin.apt:
+        name:
+          - brave-browser
+          - ghostty
+        state: present
+        update_cache: true
+      become: true
+      tags: sudo
+
+    - name: Download the Zed installer
+      ansible.builtin.get_url:
+        url: https://zed.dev/install.sh
+        dest: "{{ ansible_facts.user_dir }}/.cache/workstation/installers/zed.sh"
+        mode: "0755"
+
+    - name: Install Zed
+      ansible.builtin.command:
+        argv:
+          - /bin/bash
+          - "{{ ansible_facts.user_dir }}/.cache/workstation/installers/zed.sh"
+        creates: "{{ ansible_facts.user_dir }}/.local/zed.app/bin/zed"
+
+    - name: Configure Flatpak remotes
+      ansible.builtin.command:
+        argv: [flatpak, remote-add, --user, --if-not-exists, "{{ item.0 }}", "{{ item.1 }}"]
+      loop: "{{ flatpak_remotes }}"
+      loop_control:
+        label: "{{ item.0 }}"
+      changed_when: false
+
+    - name: Install Flatpak applications
+      ansible.builtin.command:
+        argv: [flatpak, install, --user, --noninteractive, "{{ item.0 }}", "{{ item.1 }}"]
+      loop: "{{ flatpak_apps }}"
+      loop_control:
+        label: "{{ item.1 }}"
+      changed_when: false

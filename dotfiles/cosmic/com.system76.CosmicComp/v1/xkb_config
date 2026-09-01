@@ -1,0 +1,9 @@
+(
+    layout: "us,cz,ara",
+    model: "",
+    options: Some("compose:ralt,caps:escape"),
+    repeat_delay: 600,
+    repeat_rate: 25,
+    rules: "",
+    variant: ",qwerty,",
+)

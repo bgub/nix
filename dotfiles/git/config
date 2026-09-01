@@ -1,0 +1,18 @@
+[credential]
+	helper = !gh auth git-credential
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	process = git-lfs filter-process
+	required = true
+	smudge = git-lfs smudge -- %f
+
+[github]
+	user = bgub
+
+[init]
+	defaultBranch = main
+
+[user]
+	name = Ben Gubler
+	email = git@bgub.dev

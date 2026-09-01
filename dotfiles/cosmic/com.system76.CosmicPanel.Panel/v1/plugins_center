@@ -1,0 +1,5 @@
+Some([
+    "com.github.bgub.CosmicExtAppletPomodoro",
+    "com.system76.CosmicAppletTime",
+    "com.github.bgub.CosmicExtAppletVigil",
+])

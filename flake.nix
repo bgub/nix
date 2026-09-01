@@ -60,24 +60,6 @@
         specialArgs = { inherit inputs self username; };
       };
 
-      # Linux home-manager configuration (Fedora or other non-NixOS Linux)
-      # switch with:
-      # $ nix run home-manager/master -- switch --flake .#${username}
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-        modules = [
-          inputs.nix-flatpak.homeManagerModules.nix-flatpak
-          inputs.cosmic-manager.homeManagerModules.cosmic-manager
-          ./home
-          ./linux
-          ./home/cosmic.nix
-        ];
-        extraSpecialArgs = { inherit inputs self username; };
-      };
-
       # NixOS hosts — compose modules per machine
       # switch with: sudo nixos-rebuild switch --flake ~/.config/nix
       nixosConfigurations =

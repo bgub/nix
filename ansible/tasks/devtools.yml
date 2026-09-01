@@ -1,0 +1,188 @@
+---
+- name: Install development tools
+  vars:
+    user_home: "{{ ansible_facts.user_dir }}"
+    user_bin: "{{ ansible_facts.user_dir }}/.local/bin"
+    tool_cache: "{{ ansible_facts.user_dir }}/.cache/workstation/devtools"
+    user_opt: "{{ ansible_facts.user_dir }}/.local/opt"
+    dev_packages:
+      - bat
+      - build-essential
+      - clang
+      - cmake
+      - direnv
+      - elan
+      - eza
+      - fd-find
+      - ffmpeg
+      - fzf
+      - gh
+      - git-delta
+      - htop
+      - jq
+      - just
+      - libasound2-dev
+      - libfontconfig1-dev
+      - libglib2.0-dev
+      - libgtk-3-dev
+      - libvulkan1
+      - libwayland-dev
+      - libwebkit2gtk-4.1-dev
+      - libx11-xcb-dev
+      - libxkbcommon-x11-dev
+      - make
+      - pkg-config
+      - python3
+      - python3-venv
+      - ripgrep
+      - tcpdump
+      - time
+      - tmux
+      - tree
+      - zoxide
+    release_tools:
+      - name: nvim
+        url: https://github.com/neovim/neovim/releases/download/v0.12.5/nvim-linux-x86_64.tar.gz
+        archive: nvim-0.12.5.tar.gz
+        dest: "{{ user_opt }}"
+        source: "{{ user_opt }}/nvim-linux-x86_64/bin/nvim"
+      - name: hx
+        url: https://github.com/helix-editor/helix/releases/download/25.07.1/helix-25.07.1-x86_64-linux.tar.xz
+        archive: helix-25.07.1.tar.xz
+        dest: "{{ user_opt }}"
+        source: "{{ user_opt }}/helix-25.07.1-x86_64-linux/hx"
+      - name: lazygit
+        url: https://github.com/jesseduffield/lazygit/releases/download/v0.64.1/lazygit_0.64.1_linux_x86_64.tar.gz
+        archive: lazygit-0.64.1.tar.gz
+        checksum: sha256:f8ea237c41f194cd799b48505518bfdaae4edf5a2ad6bd3d898e939785ee4532
+        dest: "{{ user_opt }}/lazygit-0.64.1"
+        source: "{{ user_opt }}/lazygit-0.64.1/lazygit"
+      - name: glow
+        url: https://github.com/charmbracelet/glow/releases/download/v3.0.0/glow_3.0.0_Linux_x86_64.tar.gz
+        archive: glow-3.0.0.tar.gz
+        checksum: sha256:13e05e4b2acc18d2aee44291aefe6325b077ec321b631a0cfa780e8e3bc33f78
+        dest: "{{ user_opt }}/glow-3.0.0"
+        source: "{{ user_opt }}/glow-3.0.0/glow_3.0.0_Linux_x86_64/glow"
+
+  block:
+    - name: Install development packages
+      ansible.builtin.apt:
+        name: "{{ dev_packages }}"
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+      become: true
+      tags: sudo
+
+    - name: Ensure development tool directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop: >-
+        {{ ([user_bin, tool_cache, user_opt] + release_tools | map(attribute='dest') | list) | unique }}
+
+    - name: Provide standard Ubuntu command names
+      ansible.builtin.file:
+        src: "/usr/bin/{{ item.0 }}"
+        dest: "{{ user_bin }}/{{ item.1 }}"
+        state: link
+        force: true
+        follow: false
+      loop:
+        - [batcat, bat]
+        - [fdfind, fd]
+
+    - name: Install Herdr
+      ansible.builtin.get_url:
+        url: https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-linux-x86_64
+        dest: "{{ user_bin }}/herdr"
+        mode: "0755"
+
+    - name: Install user runtimes and CLI tools
+      ansible.builtin.shell: |
+        set -euo pipefail
+        export PATH="{{ user_bin }}:{{ user_home }}/.cargo/bin:$PATH"
+
+        if ! command -v fnm >/dev/null; then
+          curl -fsSL https://fnm.vercel.app/install |
+            bash -s -- --install-dir "{{ user_bin }}" --skip-shell --release v1.39.0
+        fi
+        fnm install --lts >/dev/null
+        fnm default lts-latest >/dev/null
+
+        npm=(fnm exec --using=lts-latest -- npm)
+        for package in \
+          pnpm \
+          @anthropic-ai/claude-code@2.1.158 \
+          @biomejs/biome@2.4.15 \
+          typescript@5.9.3 \
+          typescript-language-server@5.3.0; do
+          name="${package%@*}"
+          "${npm[@]}" list --global --depth=0 "$name" >/dev/null 2>&1 ||
+            "${npm[@]}" install --global "$package"
+        done
+
+        if [[ ! -x "{{ user_home }}/.local/share/bun/bin/bun" ]]; then
+          curl -fsSL https://bun.sh/install |
+            BUN_INSTALL="{{ user_home }}/.local/share/bun" bash -s -- bun-v1.3.13
+        fi
+        if [[ ! -x "{{ user_home }}/.local/share/deno/bin/deno" ]]; then
+          curl -fsSL https://deno.land/install.sh |
+            DENO_INSTALL="{{ user_home }}/.local/share/deno" sh -s v2.8.0
+        fi
+        uv tool install ansible-core==2.21.3 >/dev/null
+        uv tool install yt-dlp==2026.3.17 >/dev/null
+
+        if [[ ! -x "{{ user_home }}/.cargo/bin/cargo" ]]; then
+          curl --proto '=https' --tlsv1.2 -fsSL https://sh.rustup.rs |
+            sh -s -- -y --no-modify-path --profile minimal --default-toolchain stable
+        fi
+        if [[ ! -x "{{ user_home }}/.cargo/bin/cargo-binstall" ]]; then
+          curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/v1.22.0/install-from-binstall-release.sh |
+            BINSTALL_VERSION=1.22.0 CARGO_HOME="{{ user_home }}/.cargo" sh
+        fi
+        for tool in \
+          starship:starship@1.25.1 \
+          cargo-generate:cargo-generate@0.23.9 \
+          jj:jj-cli@0.41.0 \
+          lazyjj:lazyjj@0.5.0; do
+          binary="${tool%%:*}"
+          package="${tool#*:}"
+          [[ -x "{{ user_home }}/.cargo/bin/$binary" ]] ||
+            cargo-binstall --no-confirm "$package"
+        done
+      args:
+        executable: /bin/bash
+      changed_when: false
+
+    - name: Download release tools
+      ansible.builtin.get_url:
+        url: "{{ item.url }}"
+        dest: "{{ tool_cache }}/{{ item.archive }}"
+        checksum: "{{ item.checksum | default(omit) }}"
+        mode: "0644"
+      loop: "{{ release_tools }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Extract release tools
+      ansible.builtin.unarchive:
+        src: "{{ tool_cache }}/{{ item.archive }}"
+        dest: "{{ item.dest }}"
+        creates: "{{ item.source }}"
+        remote_src: true
+      loop: "{{ release_tools }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Link release tools into the user path
+      ansible.builtin.file:
+        src: "{{ item.source }}"
+        dest: "{{ user_bin }}/{{ item.name }}"
+        state: link
+        force: true
+        follow: false
+      loop: "{{ release_tools }}"
+      loop_control:
+        label: "{{ item.name }}"

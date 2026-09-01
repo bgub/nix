@@ -1,0 +1,45 @@
+[settings]
+# These files are edited in place by their applications. Keep the repository
+# copy authoritative so changes appear in git immediately.
+default_target_type = "symbolic"
+
+[zed.files]
+"dotfiles/zed/settings.json" = "~/.config/zed/settings.json"
+"dotfiles/zed/keymap.json" = "~/.config/zed/keymap.json"
+"dotfiles/zed/tasks.json" = "~/.config/zed/tasks.json"
+
+[ghostty.files]
+"dotfiles/ghostty/config.ghostty" = "~/.config/ghostty/config.ghostty"
+
+[cosmic.files]
+"dotfiles/cosmic/com.system76.CosmicAppletTime/v1/military_time" = "~/.config/cosmic/com.system76.CosmicAppletTime/v1/military_time"
+"dotfiles/cosmic/com.system76.CosmicComp/v1/autotile" = "~/.config/cosmic/com.system76.CosmicComp/v1/autotile"
+"dotfiles/cosmic/com.system76.CosmicComp/v1/xkb_config" = "~/.config/cosmic/com.system76.CosmicComp/v1/xkb_config"
+"dotfiles/cosmic/com.system76.CosmicPanel/v1/entries" = "~/.config/cosmic/com.system76.CosmicPanel/v1/entries"
+"dotfiles/cosmic/com.system76.CosmicPanel.Panel/v1/margin" = "~/.config/cosmic/com.system76.CosmicPanel.Panel/v1/margin"
+"dotfiles/cosmic/com.system76.CosmicPanel.Panel/v1/name" = "~/.config/cosmic/com.system76.CosmicPanel.Panel/v1/name"
+"dotfiles/cosmic/com.system76.CosmicPanel.Panel/v1/plugins_center" = "~/.config/cosmic/com.system76.CosmicPanel.Panel/v1/plugins_center"
+"dotfiles/cosmic/com.system76.CosmicPanel.Panel/v1/plugins_wings" = "~/.config/cosmic/com.system76.CosmicPanel.Panel/v1/plugins_wings"
+"dotfiles/cosmic/com.system76.CosmicSettings.Shortcuts/v1/custom" = "~/.config/cosmic/com.system76.CosmicSettings.Shortcuts/v1/custom"
+"dotfiles/cosmic/com.system76.CosmicTerm/v1/default_profile" = "~/.config/cosmic/com.system76.CosmicTerm/v1/default_profile"
+"dotfiles/cosmic/com.system76.CosmicTerm/v1/font_name" = "~/.config/cosmic/com.system76.CosmicTerm/v1/font_name"
+"dotfiles/cosmic/com.system76.CosmicTerm/v1/profiles" = "~/.config/cosmic/com.system76.CosmicTerm/v1/profiles"
+"dotfiles/cosmic/com.system76.CosmicTerm/v1/show_headerbar" = "~/.config/cosmic/com.system76.CosmicTerm/v1/show_headerbar"
+
+[herdr.files]
+"dotfiles/herdr/config.toml" = "~/.config/herdr/config.toml"
+
+[shell.files]
+"dotfiles/zsh/zshrc" = "~/.zshrc"
+"dotfiles/zsh/zshenv" = "~/.zshenv"
+"dotfiles/starship/starship.toml" = "~/.config/starship.toml"
+
+[git.files]
+"dotfiles/git/config" = "~/.config/git/config"
+"dotfiles/git/ignore" = "~/.config/git/ignore"
+
+[nvim.files]
+"dotfiles/nvim/init.lua" = "~/.config/nvim/init.lua"
+
+[flameshot.files]
+"dotfiles/flameshot/flameshot.ini" = "~/.config/flameshot/flameshot.ini"

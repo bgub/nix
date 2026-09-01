@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ansible_bin="$(command -v ansible-playbook || true)"
+
+if ((EUID == 0)); then
+  echo "Run this command as your normal user; it requests sudo when needed." >&2
+  exit 1
+fi
+
+if [[ "$(uname -s)" != "Linux" ]]; then
+  echo "This bootstrap is for Pop!_OS; macOS and NixOS remain Nix-managed." >&2
+  exit 1
+fi
+
+if [[ -z "$ansible_bin" ]]; then
+  sudo apt-get update
+  sudo apt-get install --yes ansible-core
+  ansible_bin="$(command -v ansible-playbook)"
+fi
+
+"$ansible_bin" \
+  --inventory "localhost," \
+  --connection local \
+  --ask-become-pass \
+  "$@" \
+  "$repo_root/ansible/workstation.yml"
+
+cd "$repo_root"
+"$HOME/.local/bin/dotter" \
+  --global-config .dotter/global.toml \
+  --local-config .dotter/linux.toml \
+  --force \
+  --noconfirm \
+  deploy
