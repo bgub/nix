@@ -26,6 +26,7 @@ let
     "aerospace/aerospace.toml" = "aerospace/aerospace.toml";
     "ghostty/config.ghostty" = "ghostty/config.ghostty";
     "herdr/config.toml" = "herdr/config.toml";
+    "kanata/kanata.kbd" = "kanata/kanata.kbd";
     # "alacritty/alacritty.toml" = "alacritty/alacritty.toml";
   };
 

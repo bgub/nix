@@ -1,0 +1,84 @@
+(defcfg
+  process-unmapped-keys yes
+  macos-dev-names-exclude (
+    "Voyager"
+  )
+)
+
+;; Sparse layers name each remapped key directly; all other keys pass through.
+(defsrc)
+
+(defvar
+  tap-time 150
+  hold-time 150
+  hold-time-slow 180
+  hold-time-a 250
+)
+
+(defalias
+  a (tap-hold $tap-time $hold-time-a a lmet)
+  s (tap-hold $tap-time $hold-time-slow s lsft)
+  d (tap-hold $tap-time $hold-time-slow d (multi lalt (layer-while-held text-nav)))
+  f (tap-hold $tap-time $hold-time f lctl)
+  ; (tap-hold $tap-time $hold-time-slow ; rmet)
+  caps (tap-hold $tap-time 130 esc (layer-while-held navigation))
+)
+
+(deflayermap (base)
+  ;; Kanata's virtual keyboard needs explicit macOS media-key mappings.
+  ;; See https://github.com/jtroo/kanata/issues/975.
+  f1 brdn
+  f2 brup
+  f7 prev
+  f8 pp
+  f9 next
+  f10 mute
+  f11 vold
+  f12 volu
+  fn (multi fn (layer-while-held function-keys))
+  caps @caps
+  a @a
+  s @s
+  d @d
+  f @f
+  ; @;
+)
+
+;; Fn immediately restores standard F-keys and remains available to macOS shortcuts.
+(deflayermap (function-keys)
+  f1 f1
+  f2 f2
+  f7 f7
+  f8 f8
+  f9 f9
+  f10 f10
+  f11 f11
+  f12 f12
+)
+
+;; Hold D for Option; H/L send Option+Left/Right and J/K send Option+Down/Up.
+;; H/L navigate words; J/K move lines in Gneiss and the configured Obsidian vault.
+;; Shift remains active for word selection, including the home-row S modifier.
+(deflayermap (text-nav)
+  h left
+  j down
+  k up
+  l right
+)
+
+(deflayermap (navigation)
+  1 (multi lctl 1)
+  2 (multi lctl 2)
+  3 (multi lctl 3)
+  4 (multi lctl 4)
+  5 (multi lctl 5)
+  t (multi lctl 6)
+  d del
+  f bspc
+  h left
+  j down
+  k up
+  l right
+  c (multi lctl c)
+  v (multi lctl v)
+)
